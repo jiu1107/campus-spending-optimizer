@@ -44,6 +44,7 @@
 ---
 
 ## 프로젝트 구조
+```
 campus-spending-optimizer/
 ├── frontend/          # React + Vite
 │   ├── src/
@@ -63,6 +64,7 @@ campus-spending-optimizer/
 │       └── performance/ # 실적 서비스
 
 ## 브랜치 전략
+```
 main        # 최종 시연용
 └── develop # 통합 브랜치
 ├── feature/teamA
