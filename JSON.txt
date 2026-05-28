@@ -1,0 +1,100 @@
+[
+  {
+    "cardId": 1,
+    "cardName": "대학생 꿀카드",
+    "company": "신한카드",
+    "benefits": [
+      {
+        "category": "FOOD",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.10,
+        "requirementMin": 300000,
+        "description": "식당 10% 할인 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "CAFE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.15,
+        "requirementMin": 200000,
+        "description": "카페 15% 할인 (전월 실적 20만원 이상)"
+      },
+      {
+        "category": "TRANSPORT",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 0,
+        "description": "대중교통 5% 적립 (실적 무관)"
+      },
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.07,
+        "requirementMin": 100000,
+        "description": "편의점 7% 할인 (전월 실적 10만원 이상)"
+      }
+    ]
+  },
+  {
+    "cardId": 2,
+    "cardName": "청춘 체크카드",
+    "company": "국민카드",
+    "benefits": [
+      {
+        "category": "FOOD",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.05,
+        "requirementMin": 200000,
+        "description": "음식점 5% 할인 (전월 실적 20만원 이상)"
+      },
+      {
+        "category": "SHOPPING",
+        "benefitType": "POINT",
+        "benefitValue": 0.03,
+        "requirementMin": 0,
+        "description": "온라인 쇼핑 3% 적립 (실적 무관)"
+      },
+      {
+        "category": "CULTURE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.10,
+        "requirementMin": 300000,
+        "description": "영화/서점 10% 할인 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "CAFE",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 100000,
+        "description": "카페 5% 적립 (전월 실적 10만원 이상)"
+      }
+    ]
+  },
+  {
+    "cardId": 3,
+    "cardName": "알뜰 쇼핑카드",
+    "company": "하나카드",
+    "benefits": [
+      {
+        "category": "SHOPPING",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.12,
+        "requirementMin": 400000,
+        "description": "온라인/오프라인 쇼핑 12% 할인 (전월 실적 40만원 이상)"
+      },
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 0,
+        "description": "편의점 5% 적립 (실적 무관)"
+      },
+      {
+        "category": "ETC",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.03,
+        "requirementMin": 0,
+        "description": "모든 가맹점 0.3% 할인 (실적 무관)"
+      }
+    ]
+  }
+]
