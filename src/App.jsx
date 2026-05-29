@@ -47,7 +47,7 @@ function App() {
             setPage('home')
             setOpen(false)
           }}>
-            홈
+            홈 대시보드
           </button>
 
           <button onClick={() => {
