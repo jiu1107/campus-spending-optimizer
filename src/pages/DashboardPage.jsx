@@ -214,7 +214,7 @@ function DashboardPage({
   return (
     <div className="layout">
       <h1 className="page-title">
-        소비 패턴 분석
+        소비 내역
       </h1>
 
       <div className="summary-grid">
@@ -235,7 +235,7 @@ function DashboardPage({
       </div>
 
       <div className="card">
-        <h2>카테고리별 예산</h2>
+        <h2>나의 예산</h2>
 
         <div className="add-box">
           <select
