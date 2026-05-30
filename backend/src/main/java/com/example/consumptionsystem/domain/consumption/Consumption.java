@@ -41,6 +41,6 @@ public class Consumption {
     private LocalDateTime consumedAt;
 
     public enum Category {
-        FOOD, CAFE, TRANSPORT, SHOPPING, ENTERTAINMENT, EDUCATION, HEALTH, ETC
+        FOOD, CAFE, TRANSPORT, SHOPPING, ENTERTAINMENT, EDUCATION, HEALTH, CONVENIENCE_STORE, CULTURE, ETC
     }
 }

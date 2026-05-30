@@ -1,0 +1,422 @@
+.page {
+  background: var(--color-bg);
+  min-height: calc(100vh - 56px);
+  padding: 28px 40px;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.userName {
+  color: var(--color-primary);
+}
+
+.greetingSub {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.notifyBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.5px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notifyBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 상단 요약 카드 */
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.summaryCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.2s;
+}
+
+.summaryCard:hover {
+  border-color: var(--color-primary);
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.summaryValue {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.valuePrimary { color: var(--color-primary); }
+.valueSuccess { color: #1D9E75; }
+
+.summaryBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  width: fit-content;
+  font-weight: 500;
+}
+
+.badgeUp {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badgeDown {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.badgeSuccess {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+/* 메인 2열 그리드 */
+.mainGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.featureCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.featureCard:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 12px rgba(0, 118, 241, 0.08);
+}
+
+.featureCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.featureIconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.featureTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.featureSub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.arrowIcon {
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.featureCard:hover .arrowIcon {
+  transform: translateX(3px);
+}
+
+/* 지도 미리보기 */
+.mapPreview {
+  position: relative;
+  height: 100px;
+  background: #F0F4F8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mapDot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.mapBadge {
+  position: absolute;
+  top: 35%;
+  left: 30%;
+  background: #fff;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* 소비 패턴 분석 */
+.analysisContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.analysisRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analysisLeft {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.analysisCat {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.analysisBarWrap {
+  flex: 1;
+  height: 6px;
+  background: #F1F5F9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.analysisBar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.analysisAmount {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  min-width: 110px;
+  text-align: right;
+}
+
+.overBadge {
+  font-size: 10px;
+  background: #FEF3C7;
+  color: #92400E;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* 카드 추천 */
+.recommendContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommendBest {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.recommendLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rankBadge {
+  display: inline-flex;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.recommendCardName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.recommendRight {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recommendRate {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.recommendExpected {
+  font-size: 11px;
+  color: var(--color-primary);
+}
+
+.recommendDetail {
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detailLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.detailValue {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.detailValuePrimary { color: var(--color-primary); }
+
+/* 전월 실적 관리 */
+.performanceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.performanceAmounts {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.performanceCurrent {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.performanceDivider {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.performanceTarget {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.performanceBarWrap {
+  width: 100%;
+  height: 8px;
+  background: #F1F5F9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.performanceBar {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.performanceInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-primary-light);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.performanceInfoText {
+  font-size: 12px;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.performanceDays {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}

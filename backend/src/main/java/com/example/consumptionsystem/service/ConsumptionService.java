@@ -58,42 +58,4 @@ public class ConsumptionService {
                 ))
                 .collect(Collectors.toList());
     }
-
-    // DTOs for request and response
-    // These would typically be in a separate 'dto' package
-    // For simplicity, defining them here temporarily
-    public static class ConsumptionRequest {
-        private Integer amount;
-        private String category;
-        private String storeName;
-        private Double latitude;
-        private Double longitude;
-        private LocalDateTime consumedAt;
-
-        public Integer getAmount() { return amount; }
-        public void setAmount(Integer amount) { this.amount = amount; }
-        public String getCategory() { return category; }
-        public void setCategory(String category) { this.category = category; }
-        public String getStoreName() { return storeName; }
-        public void setStoreName(String storeName) { this.storeName = storeName; }
-        public Double getLatitude() { return latitude; }
-        public void setLatitude(Double latitude) { this.latitude = latitude; }
-        public Double getLongitude() { return longitude; }
-        public void setLongitude(Double longitude) { this.longitude = longitude; }
-        public LocalDateTime getConsumedAt() { return consumedAt; }
-        public void setConsumedAt(LocalDateTime consumedAt) { this.consumedAt = consumedAt; }
-    }
-
-    public static class CategorySummaryResponse {
-        private String category;
-        private Long totalAmount;
-
-        public CategorySummaryResponse(String category, Long totalAmount) {
-            this.category = category;
-            this.totalAmount = totalAmount;
-        }
-
-        public String getCategory() { return category; }
-        public Long getTotalAmount() { return totalAmount; }
-    }
 }
