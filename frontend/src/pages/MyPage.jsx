@@ -11,52 +11,41 @@ const mockUser = {
   email: localStorage.getItem('email') || '',
   created_at: '2025년 5월 1일',
 }
-const mockUserCards = [
-  {
-    id: 1,
-    card_name: 'KB국민 노리2 체크카드',
-    company: 'KB국민',
-    benefits: { 식비: 5, 카페: 3, 편의점: 2, 문화: 0, 쇼핑: 0 },
-    color: '#185FA5',
-  },
-  {
-    id: 2,
-    card_name: '신한 Hey Young 체크카드',
-    company: '신한',
-    benefits: { 식비: 0, 카페: 10, 편의점: 0, 문화: 15, 쇼핑: 5 },
-    color: '#7F77DD',
-  },
-]
 
-const companies = ['KB국민', '신한', '삼성', '하나', '현대']
+
+const companies = ['신한', '하나', '농협', '카카오뱅크', '토스뱅크', '우리', 'KB국민', '기업']
 
 const cardsByCompany = {
-  KB국민: [
-    { name: 'KB국민 노리2 체크카드', benefits: { 식비: 5, 카페: 3, 편의점: 2, 문화: 0, 쇼핑: 0 }, color: '#185FA5' },
-    { name: 'KB국민 청춘대로 체크카드', benefits: { 식비: 3, 카페: 5, 편의점: 0, 문화: 5, 쇼핑: 0 }, color: '#0C447C' },
-  ],
   신한: [
     { name: '신한 Hey Young 체크카드', benefits: { 식비: 0, 카페: 10, 편의점: 0, 문화: 15, 쇼핑: 5 }, color: '#7F77DD' },
-    { name: '신한 Deep Dream 체크카드', benefits: { 식비: 5, 카페: 0, 편의점: 5, 문화: 0, 쇼핑: 3 }, color: '#534AB7' },
-  ],
-  삼성: [
-    { name: '삼성 iD ON 체크카드', benefits: { 식비: 3, 카페: 0, 편의점: 5, 문화: 0, 쇼핑: 3 }, color: '#1D9E75' },
-    { name: '삼성 taptap 체크카드', benefits: { 식비: 0, 카페: 5, 편의점: 0, 문화: 5, 쇼핑: 5 }, color: '#0F6E56' },
   ],
   하나: [
-    { name: '하나 1Q 체크카드', benefits: { 식비: 5, 카페: 5, 편의점: 3, 문화: 0, 쇼핑: 0 }, color: '#1D9E75' },
-    { name: '하나 머니 체크카드', benefits: { 식비: 0, 카페: 0, 편의점: 0, 문화: 3, 쇼핑: 7 }, color: '#085041' },
+    { name: '하나 1Q 체크카드', benefits: { 식비: 0, 카페: 5, 편의점: 5, 문화: 0, 쇼핑: 0 }, color: '#1D9E75' },
   ],
-  현대: [
-    { name: '현대 Zero 체크카드', benefits: { 식비: 0, 카페: 0, 편의점: 0, 문화: 0, 쇼핑: 10 }, color: '#888780' },
-    { name: '현대 M 체크카드', benefits: { 식비: 3, 카페: 3, 편의점: 3, 문화: 3, 쇼핑: 3 }, color: '#444441' },
+  농협: [
+    { name: '농협 올바른POINT 체크카드', benefits: { 식비: 0.2, 카페: 0.3, 편의점: 0.3, 문화: 0.3, 쇼핑: 0.3 }, color: '#4CAF50' },
+  ],
+  카카오뱅크: [
+    { name: '카카오뱅크 프렌즈 체크카드', benefits: { 식비: 0, 카페: 3, 편의점: 2, 문화: 0, 쇼핑: 0 }, color: '#F9E000' },
+  ],
+  토스뱅크: [
+    { name: '토스뱅크 체크카드', benefits: { 식비: 0.3, 카페: 0.3, 편의점: 0.3, 문화: 0.3, 쇼핑: 0.3 }, color: '#0064FF' },
+  ],
+  우리: [
+    { name: '우리 카드의정석2 원더라이프 체크카드', benefits: { 식비: 0.2, 카페: 0.2, 편의점: 0.5, 문화: 0.2, 쇼핑: 0.5 }, color: '#0076F1' },
+  ],
+  KB국민: [
+    { name: 'KB국민 트래블러스 체크카드', benefits: { 식비: 2, 카페: 3, 편의점: 2, 문화: 0, 쇼핑: 3 }, color: '#185FA5' },
+  ],
+  기업: [
+    { name: 'IBK 일상의기쁨 체크카드', benefits: { 식비: 0, 카페: 5, 편의점: 10, 문화: 10, 쇼핑: 0 }, color: '#FF6B35' },
   ],
 }
 
 
-function MyPage() {
+function MyPage({ userCards: initialCards = [], onRegisterCard, onDeleteCard }) {
   const [activeMenu, setActiveMenu] = useState('cards')
-  const [userCards, setUserCards] = useState(mockUserCards)
+ const [userCards, setUserCards] = useState(initialCards)
   const [showCardModal, setShowCardModal] = useState(false)
   const [selectedCompany, setSelectedCompany] = useState(null)
   const [selectedCard, setSelectedCard] = useState(null)
@@ -70,8 +59,9 @@ const handleLogout = () => {
 }
 
   const handleDeleteCard = (cardId) => {
-    setUserCards(prev => prev.filter(card => card.id !== cardId))
-  }
+  setUserCards(prev => prev.filter(card => card.id !== cardId))
+  onDeleteCard?.(cardId)
+}
 
   const handleRegisterCard = () => {
   if (!selectedCard) return
@@ -85,6 +75,7 @@ const handleLogout = () => {
     color: cardData.color,
   }
   setUserCards(prev => [...prev, newCard])
+  onRegisterCard?.(newCard)
   setShowCardModal(false)
   setSelectedCompany(null)
   setSelectedCard(null)
@@ -167,9 +158,6 @@ const handleLogout = () => {
                     <MdCreditCard size={40} color="#D1D5DB" />
                     <p className={styles.emptyTitle}>등록된 카드가 없어요</p>
                     <p className={styles.emptySub}>카드를 등록하면 혜택을 비교할 수 있어요</p>
-                    <button className={styles.emptyBtn} onClick={() => setShowCardModal(true)}>
-                      <MdAdd size={14} /> 카드 등록하기
-                    </button>
                   </div>
                 ) : (
                   <div className={styles.cardList}>

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { MdRestaurant, MdLocalCafe, MdStorefront, MdTheaters, MdShoppingBag, MdAdd, MdDelete, MdWarning } from 'react-icons/md'
+import { getConsumptions, createConsumption } from '../api/consumption'
 
 const categoryMeta = {
   식비: { icon: MdRestaurant, color: '#EF9F27', bg: '#FFF7E6' },
@@ -11,11 +12,8 @@ const categoryMeta = {
 
 export default function ConsumptionAnalysisView({
   currentBudgets = {},
-  expenses = [],
   currentDate = { year: new Date().getFullYear(), month: new Date().getMonth() + 1 },
   onAddBudget,
-  onAddExpense,
-  onDeleteExpense,
   userCards = [],
   onNavigateMonth,
 }) {
@@ -23,7 +21,10 @@ export default function ConsumptionAnalysisView({
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState('전체')
   const [budgetForm, setBudgetForm] = useState({ category: '식비', amount: '' })
-  const [expenseForm, setExpenseForm] = useState({ place: '', category: '식비', amount: '', card: '', date: '' })
+  const [expenseForm, setExpenseForm] = useState({ place: '', category: '식비', amount: '', card: '', date: new Date().toISOString().split('T')[0] })
+
+const [expenses, setExpenses] = useState([])
+
 
   const currentYearMonthStr = `${currentDate.year}-${String(currentDate.month).padStart(2, '0')}`
   const monthlyExpenses = expenses.filter(exp => exp.date.startsWith(currentYearMonthStr))
@@ -45,13 +46,20 @@ export default function ConsumptionAnalysisView({
     setIsBudgetModalOpen(false)
   }
 
-  const submitExpense = (e) => {
-    e.preventDefault()
-    if (!expenseForm.place || !expenseForm.amount || !expenseForm.date) return
-    onAddExpense(expenseForm)
+  const submitExpense = async (e) => {
+  e.preventDefault()
+  if (!expenseForm.place || !expenseForm.amount || !expenseForm.date) return
+  try {
+    await createConsumption(expenseForm)
+    const data = await getConsumptions(currentDate.year, currentDate.month)
+    setExpenses(data)
     setExpenseForm({ place: '', category: '식비', amount: '', card: '', date: '' })
     setIsExpenseModalOpen(false)
+  } catch (err) {
+    console.error('소비 내역 추가 실패:', err)
+    alert('소비 내역 추가에 실패했습니다.')
   }
+}
 
   const isCloseToOverBudget = Object.keys(currentBudgets).some(cat => {
     const budget = currentBudgets[cat]
@@ -106,72 +114,78 @@ export default function ConsumptionAnalysisView({
         </div>
 
         {/* 중단: 예산 + 게이지 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-          <div style={card}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h3 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-primary)' }}>카테고리별 예산</h3>
-              <button onClick={() => setIsBudgetModalOpen(true)} style={btn}>
-                <MdAdd size={14} /> 추가 / 수정
-              </button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-              {Object.keys(currentBudgets).length === 0 ? (
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>추가 버튼을 눌러 예산을 설정해보세요!</p>
-              ) : Object.entries(currentBudgets).map(([cat, amount]) => {
-                const Meta = categoryMeta[cat]
-                const Icon = Meta?.icon || MdRestaurant
-                return (
-                  <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 10px', background: '#F9FAFB', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                      <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: Meta?.bg || '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon size={12} color={Meta?.color || '#888'} />
-                      </div>
-                      <span style={{ fontSize: '12px', fontWeight: '500', color: 'var(--color-text-primary)' }}>{cat}</span>
-                    </div>
-                    <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary)' }}>{amount.toLocaleString()}원</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div style={card}>
-            <h3 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-primary)', marginBottom: '12px' }}>예산 대비 현황</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {Object.keys(currentBudgets).length === 0 ? (
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>예산을 먼저 설정해주세요</p>
-              ) : Object.entries(currentBudgets).map(([cat, budget]) => {
-                const spent = getCategoryTotal(cat)
-                const percent = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0
-                const Meta = categoryMeta[cat]
-                const Icon = Meta?.icon || MdRestaurant
-                const isOver = spent > budget
-                return (
-                  <div key={cat}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Icon size={11} color={Meta?.color || '#888'} />
-                        <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--color-text-primary)' }}>{cat}</span>
-                        {isOver && <span style={{ fontSize: '10px', color: '#ef4444', fontWeight: '600' }}>초과</span>}
-                      </div>
-                      <span style={{ fontSize: '10px', color: 'var(--color-text-secondary)' }}>{spent.toLocaleString()} / {budget.toLocaleString()}원</span>
-                    </div>
-                    <div style={{ height: '6px', background: '#F1F5F9', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: `${percent}%`, background: isOver ? '#ef4444' : (Meta?.color || '#888'), borderRadius: '999px', transition: 'width 0.4s' }} />
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            {isCloseToOverBudget && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '10px', color: '#ef4444', fontSize: '11px', fontWeight: '500' }}>
-                <MdWarning size={13} />
-                일부 카테고리 예산 초과 또는 임박 상태
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+  <div style={{ ...card, display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+      <h3 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-primary)' }}>카테고리별 예산</h3>
+      <button onClick={() => setIsBudgetModalOpen(true)} style={btn}>
+        <MdAdd size={14} /> 추가 / 수정
+      </button>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', flex: 1 }}>
+      {Object.keys(currentBudgets).length === 0 ? (
+        <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>추가 버튼을 눌러 예산을 설정해보세요!</p>
+      ) : Object.entries(currentBudgets).map(([cat, amount]) => {
+        const Meta = categoryMeta[cat]
+        const Icon = Meta?.icon || MdRestaurant
+        return (
+          <div key={cat} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 10px', background: '#F9FAFB', borderRadius: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: Meta?.bg || '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon size={12} color={Meta?.color || '#888'} />
               </div>
-            )}
+              <span style={{ fontSize: '12px', fontWeight: '500', color: 'var(--color-text-primary)' }}>{cat}</span>
+            </div>
+            <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary)' }}>{amount.toLocaleString()}원</span>
           </div>
-        </div>
+        )
+      })}
+    </div>
+    {/* 예산 총합 */}
+    {Object.keys(currentBudgets).length > 0 && (
+      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '8px', borderTop: '0.5px solid var(--color-border)', marginTop: '8px' }}>
+        <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-secondary)' }}>총 예산</span>
+        <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--color-primary)' }}>{totalBudget.toLocaleString()}원</span>
+      </div>
+    )}
+  </div>
 
+  <div style={{ ...card, display: 'flex', flexDirection: 'column' }}>
+    <h3 style={{ fontSize: '13px', fontWeight: '600', color: 'var(--color-text-primary)', marginBottom: '12px' }}>예산 소진 현황</h3>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', flex: 1 }}>
+      {Object.keys(currentBudgets).length === 0 ? (
+        <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>예산을 먼저 설정해주세요</p>
+      ) : Object.entries(currentBudgets).map(([cat, budget]) => {
+        const spent = getCategoryTotal(cat)
+        const percent = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0
+        const Meta = categoryMeta[cat]
+        const Icon = Meta?.icon || MdRestaurant
+        const isOver = spent > budget
+        return (
+  <div key={cat} style={{ padding: '7px 10px', background: '#F9FAFB', borderRadius: '8px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Icon size={11} color={Meta?.color || '#888'} />
+                <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--color-text-primary)' }}>{cat}</span>
+                {isOver && <span style={{ fontSize: '10px', color: '#ef4444', fontWeight: '600' }}>초과</span>}
+              </div>
+              <span style={{ fontSize: '10px', color: 'var(--color-text-secondary)' }}>{spent.toLocaleString()} / {budget.toLocaleString()}원</span>
+            </div>
+            <div style={{ height: '6px', background: '#F1F5F9', borderRadius: '999px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${percent}%`, background: isOver ? '#ef4444' : (Meta?.color || '#888'), borderRadius: '999px', transition: 'width 0.4s' }} />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+    {isCloseToOverBudget && (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '10px', color: '#ef4444', fontSize: '11px', fontWeight: '500' }}>
+        <MdWarning size={13} />
+        일부 카테고리 예산 초과 또는 임박 상태
+      </div>
+    )}
+  </div>
+</div>
         {/* 하단: 소비 내역 + 카드별 혜택 */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
 
@@ -215,7 +229,13 @@ export default function ConsumptionAnalysisView({
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-text-primary)' }}>{exp.amount.toLocaleString()}원</span>
-                          <button onClick={() => onDeleteExpense(exp.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-border)', padding: '1px' }}>
+                          <button onClick={async () => {
+                              try {
+                                setExpenses(prev => prev.filter(e => e.id !== exp.id))
+                              } catch (err) {
+                                console.error('삭제 실패:', err)
+                              }
+                            }}  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-border)', padding: '1px' }}>
                             <MdDelete size={13} />
                           </button>
                         </div>
@@ -330,8 +350,14 @@ export default function ConsumptionAnalysisView({
                 </div>
                 <div>
                   <label style={{ fontSize: '11px', color: 'var(--color-text-secondary)', fontWeight: '500', display: 'block', marginBottom: '4px' }}>결제 카드</label>
-                  <input type="text" placeholder="예: KB국민 노리2" value={expenseForm.card} onChange={e => setExpenseForm(p => ({ ...p, card: e.target.value }))}
-                    style={{ width: '100%', padding: '8px 10px', border: '0.5px solid var(--color-border)', borderRadius: '8px', fontSize: '13px', outline: 'none' }} />
+                 <select value={expenseForm.card} onChange={e => setExpenseForm(p => ({ ...p, card: e.target.value }))}
+                    style={{ width: '100%', padding: '8px 10px', border: '0.5px solid var(--color-border)', borderRadius: '8px', fontSize: '13px', outline: 'none', background: 'white' }}>
+                    <option value="">카드 선택</option>
+                    {userCards.map(card => (
+                      <option key={card.id} value={card.card_name}>{card.card_name}</option>
+                    ))}
+                    <option value="기타">기타</option>
+                  </select>
                 </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -342,7 +368,11 @@ export default function ConsumptionAnalysisView({
                 </div>
                 <div>
                   <label style={{ fontSize: '11px', color: 'var(--color-text-secondary)', fontWeight: '500', display: 'block', marginBottom: '4px' }}>소비 일자</label>
-                  <input type="date" value={expenseForm.date} onChange={e => setExpenseForm(p => ({ ...p, date: e.target.value }))}
+                  <input type="date"
+                    value={expenseForm.date}
+                    onChange={e => setExpenseForm(p => ({ ...p, date: e.target.value }))}
+                    max={new Date().toISOString().split('T')[0]}
+                    defaultValue={new Date().toISOString().split('T')[0]}
                     style={{ width: '100%', padding: '8px 10px', border: '0.5px solid var(--color-border)', borderRadius: '8px', fontSize: '13px', outline: 'none' }} required />
                 </div>
               </div>

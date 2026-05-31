@@ -23,6 +23,7 @@ function Login() {
       const res = await login(form.email, form.password)
       localStorage.setItem('token', res.accessToken)
       localStorage.setItem('nickname', res.nickname)
+      localStorage.setItem('userId', res.userId)
       navigate('/')
     } catch {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')

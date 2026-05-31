@@ -271,7 +271,7 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 40px 0;
+  padding: 106px 0;
 }
 
 .emptyTitle {
@@ -466,13 +466,13 @@
 .required { color: var(--color-danger); }
 
 .companyRow {
-  display: flex;
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
 .companyBtn {
-  flex: 1;
+  width: 100%;
   height: 36px;
   padding: 0;
   border-radius: 8px;
@@ -483,7 +483,6 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
 }
 
 .companyBtn:hover {

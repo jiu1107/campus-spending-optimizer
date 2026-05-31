@@ -47,6 +47,7 @@ public class UserService {
         return LoginResponse.builder()
                 .accessToken(token)
                 .nickname(user.getNickname())
+                .userId(user.getId())
                 .build();
     }
 }
