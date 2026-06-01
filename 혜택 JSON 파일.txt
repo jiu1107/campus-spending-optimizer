@@ -1,0 +1,212 @@
+[
+  {
+    "cardId": 1,
+    "cardName": "트래블러스 체크카드",
+    "company": "국민카드",
+    "benefits": [
+      {
+        "category": "OVERSEAS",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.0125,
+        "requirementMin": 0,
+        "description": "해외 가맹점 이용 수수료 1.25% 면제"
+      },
+      {
+        "category": "CAFE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.10,
+        "requirementMin": 200000,
+        "description": "카페 10% 할인 (전월 실적 20만원 이상)"
+      },
+      {
+        "category": "TRANSPORT",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.05,
+        "requirementMin": 300000,
+        "description": "대중교통 5% 할인 (전월 실적 30만원 이상)"
+      }
+    ]
+  },
+  {
+    "cardId": 2,
+    "cardName": "카드의정석2 원더라이프 체크카드",
+    "company": "우리카드",
+    "benefits": [
+      {
+        "category": "ETC",
+        "benefitType": "CASHBACK",
+        "benefitValue": 0.002,
+        "requirementMin": 0,
+        "description": "국내외 전 가맹점 0.2% 캐시백 (실적 무관)"
+      },
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "CASHBACK",
+        "benefitValue": 0.005,
+        "requirementMin": 200000,
+        "description": "편의점 0.5% 캐시백 (전월 실적 20만원 이상)"
+      },
+      {
+        "category": "SHOPPING",
+        "benefitType": "CASHBACK",
+        "benefitValue": 0.005,
+        "requirementMin": 200000,
+        "description": "대형마트/온라인쇼핑 0.5% 캐시백 (전월 실적 20만원 이상)"
+      }
+    ]
+  },
+  {
+    "cardId": 3,
+    "cardName": "하나1Q 체크카드",
+    "company": "하나카드",
+    "benefits": [
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 10000,
+        "description": "편의점 5% 하나머니 적립 (1만원 이상 이용 시)"
+      },
+      {
+        "category": "CAFE",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 10000,
+        "description": "커피 5% 하나머니 적립 (1만원 이상 이용 시)"
+      },
+      {
+        "category": "TRANSPORT",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 50000,
+        "description": "대중교통 5% 하나머니 적립 (월 5만원 이상 이용 시)"
+      }
+    ]
+  },
+  {
+    "cardId": 4,
+    "cardName": "신한카드 춘식이 체크카드",
+    "company": "신한카드",
+    "benefits": [
+      {
+        "category": "KAKAO_PAY",
+        "benefitType": "POINT",
+        "benefitValue": 0.02,
+        "requirementMin": 300000,
+        "description": "카카오페이 결제 2% 적립 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 300000,
+        "description": "4대 편의점 5% 적립 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "COMMUNICATION",
+        "benefitType": "POINT",
+        "benefitValue": 0.05,
+        "requirementMin": 300000,
+        "description": "통신요금 자동이체 5% 적립 (전월 실적 30만원 이상)"
+      }
+    ]
+  },
+  {
+    "cardId": 5,
+    "cardName": "프렌즈 체크카드",
+    "company": "카카오뱅크",
+    "benefits": [
+      {
+        "category": "ETC",
+        "benefitType": "CASHBACK",
+        "benefitValue": 0.002,
+        "requirementMin": 0,
+        "description": "국내외 전 가맹점 0.2% 캐시백 (평일)"
+      },
+      {
+        "category": "ETC",
+        "benefitType": "CASHBACK",
+        "benefitValue": 0.004,
+        "requirementMin": 0,
+        "description": "국내외 전 가맹점 0.4% 캐시백 (주말/공휴일)"
+      }
+    ]
+  },
+  {
+    "cardId": 6,
+    "cardName": "토스뱅크 체크카드",
+    "company": "토스뱅크",
+    "benefits": [
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "CASHBACK",
+        "benefitValue": 500,
+        "requirementMin": 10000,
+        "description": "편의점 1만원 이상 결제 시 500원 캐시백 (월 5회)"
+      },
+      {
+        "category": "TRANSPORT",
+        "benefitType": "CASHBACK",
+        "benefitValue": 500,
+        "requirementMin": 10000,
+        "description": "대중교통 1만원 이상 결제 시 500원 캐시백 (월 5회)"
+      },
+      {
+        "category": "FOOD",
+        "benefitType": "CASHBACK",
+        "benefitValue": 500,
+        "requirementMin": 10000,
+        "description": "음식&음료 1만원 이상 결제 시 500원 캐시백 (월 5회)"
+      }
+    ]
+  },
+  {
+    "cardId": 7,
+    "cardName": "올바른POINT 체크카드",
+    "company": "농협카드",
+    "benefits": [
+      {
+        "category": "ETC",
+        "benefitType": "POINT",
+        "benefitValue": 0.002,
+        "requirementMin": 0,
+        "description": "전 가맹점 0.2% NH포인트 적립 (실적 무관)"
+      },
+      {
+        "category": "OVERSEAS",
+        "benefitType": "POINT",
+        "benefitValue": 0.015,
+        "requirementMin": 0,
+        "description": "해외이용액/면세점 최고 1.5% NH포인트 적립 (실적 무관)"
+      }
+    ]
+  },
+  {
+    "cardId": 8,
+    "cardName": "IBK 일상의 기쁨 체크카드",
+    "company": "IBK기업은행",
+    "benefits": [
+      {
+        "category": "TRANSPORT",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 200,
+        "requirementMin": 300000,
+        "description": "버스/지하철 이용 건당 200원 할인 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "CONVENIENCE_STORE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 0.05,
+        "requirementMin": 300000,
+        "description": "편의점 5% 할인 (전월 실적 30만원 이상)"
+      },
+      {
+        "category": "CULTURE",
+        "benefitType": "DISCOUNT",
+        "benefitValue": 4000,
+        "requirementMin": 300000,
+        "description": "영화관 4천원 할인 (전월 실적 30만원 이상)"
+      }
+    ]
+  }
+]

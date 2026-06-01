@@ -1,0 +1,86 @@
+-- 1. 사용자 더미 데이터 삽입 (기존과 동일)
+INSERT INTO users (email, password, nickname, created_at) VALUES
+("student1@univ.ac.kr", "$2a$10$dummy_hashed_password_1", "김대학", NOW()),
+("student2@univ.ac.kr", "$2a$10$dummy_hashed_password_2", "이청춘", NOW());
+
+-- 2. 카드 더미 데이터 삽입 (요청하신 8개 카드로 변경)
+INSERT INTO cards (card_name, company, image_url, base_benefit_rate) VALUES
+("트래블러스 체크카드", "국민카드", "http://example.com/kb_travelers.png", 0.005),
+("카드의정석2 원더라이프 체크카드", "우리카드", "http://example.com/woori_wonderlife.png", 0.002),
+("하나1Q 체크카드", "하나카드", "http://example.com/hana_1q.png", 0.003),
+("신한카드 춘식이 체크카드", "신한카드", "http://example.com/shinhan_choonsik.png", 0.005),
+("프렌즈 체크카드", "카카오뱅크", "http://example.com/kakaobank_friends.png", 0.002),
+("토스뱅크 체크카드", "토스뱅크", "http://example.com/tossbank_check.png", 0.005),
+("올바른POINT 체크카드", "농협카드", "http://example.com/nh_point.png", 0.002),
+("IBK 일상의 기쁨 체크카드", "IBK기업은행", "http://example.com/ibk_joy.png", 0.005);
+
+-- 3. 카드 혜택 더미 데이터 삽입 (JSON과 일치하도록 변경)
+INSERT INTO card_benefits (card_id, category, benefit_type, benefit_value, requirement_min) VALUES
+-- 국민 트래블러스 체크카드 (card_id: 1)
+(1, "OVERSEAS", "DISCOUNT", 0.0125, 0),
+(1, "CAFE", "DISCOUNT", 0.10, 200000),
+(1, "TRANSPORT", "DISCOUNT", 0.05, 300000),
+-- 우리 카드의정석2 원더라이프 체크카드 (card_id: 2)
+(2, "ETC", "CASHBACK", 0.002, 0),
+(2, "CONVENIENCE_STORE", "CASHBACK", 0.005, 200000),
+(2, "SHOPPING", "CASHBACK", 0.005, 200000),
+-- 하나1Q 체크카드 (card_id: 3)
+(3, "CONVENIENCE_STORE", "POINT", 0.05, 10000),
+(3, "CAFE", "POINT", 0.05, 10000),
+(3, "TRANSPORT", "POINT", 0.05, 50000),
+-- 신한카드 춘식이 체크카드 (card_id: 4)
+(4, "KAKAO_PAY", "POINT", 0.02, 300000),
+(4, "CONVENIENCE_STORE", "POINT", 0.05, 300000),
+(4, "COMMUNICATION", "POINT", 0.05, 300000),
+-- 카카오뱅크 프렌즈 체크카드 (card_id: 5)
+(5, "ETC", "CASHBACK", 0.002, 0), -- 평일
+(5, "ETC", "CASHBACK", 0.004, 0), -- 주말/공휴일
+-- 토스뱅크 체크카드 (card_id: 6)
+(6, "CONVENIENCE_STORE", "CASHBACK", 500, 10000),
+(6, "TRANSPORT", "CASHBACK", 500, 10000),
+(6, "FOOD", "CASHBACK", 500, 10000),
+-- 농협 올바른POINT 체크카드 (card_id: 7)
+(7, "ETC", "POINT", 0.002, 0),
+(7, "OVERSEAS", "POINT", 0.015, 0),
+-- IBK 일상의 기쁨 체크카드 (card_id: 8)
+(8, "TRANSPORT", "DISCOUNT", 200, 300000),
+(8, "CONVENIENCE_STORE", "DISCOUNT", 0.05, 300000),
+(8, "CULTURE", "DISCOUNT", 4000, 300000);
+
+-- 4. 사용자 보유 카드 더미 데이터 삽입 (새로운 카드 ID에 맞춰 변경)
+INSERT INTO user_cards (user_id, card_id, current_performance) VALUES
+(1, 1, 350000), -- 김대학: 국민 트래블러스 (해외/카페/교통)
+(1, 3, 150000), -- 김대학: 하나1Q (편의점/카페/교통)
+(1, 5, 250000), -- 김대학: 카뱅 프렌즈 (전 가맹점)
+(2, 2, 450000), -- 이청춘: 우리 원더라이프 (편의점/쇼핑)
+(2, 4, 320000), -- 이청춘: 신한 춘식이 (카카오페이/편의점)
+(2, 6, 180000); -- 이청춘: 토스뱅크 (편의점/교통/음식)
+
+-- 5. 소비 내역 더미 데이터 삽입 (정수형 금액 및 현실적인 가맹점명 반영)
+-- 김대학(user_id=1)의 소비 내역
+INSERT INTO consumptions (user_id, amount, category, store_name, latitude, longitude, consumed_at) VALUES
+(1, 8500, "FOOD", "역전우동", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(1, 4500, "CAFE", "컴포즈커피", 37.4979, 127.0276, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(1, 12000, "FOOD", "맘스터치", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 5000, "CAFE", "빽다방", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 3500, "CONVENIENCE_STORE", "CU", 37.5826, 127.0029, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(1, 15000, "CULTURE", "메가박스", 37.5300, 126.9648, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(1, 25000, "FOOD", "애슐리", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(1, 6000, "CAFE", "이디야", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(1, 4000, "CONVENIENCE_STORE", "GS25", 37.5551, 126.9369, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(1, 55000, "SHOPPING", "지그재그", NULL, NULL, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(1, 1300, "TRANSPORT", "버스", NULL, NULL, DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(1, 1500, "TRANSPORT", "지하철", NULL, NULL, DATE_SUB(NOW(), INTERVAL 10 DAY));
+
+-- 이청춘(user_id=2)의 소비 내역
+INSERT INTO consumptions (user_id, amount, category, store_name, latitude, longitude, consumed_at) VALUES
+(2, 120000, "SHOPPING", "올리브영", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(2, 18000, "CULTURE", "영풍문고", 37.5709, 126.9778, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(2, 6500, "FOOD", "롯데리아", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(2, 4500, "CAFE", "투썸플레이스", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(2, 85000, "SHOPPING", "쿠팡", NULL, NULL, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(2, 5000, "CONVENIENCE_STORE", "세븐일레븐", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(2, 22000, "CULTURE", "CGV", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 7 DAY)),
+(2, 9000, "FOOD", "본죽", 37.5665, 126.9780, DATE_SUB(NOW(), INTERVAL 8 DAY)),
+(2, 1450, "TRANSPORT", "버스", NULL, NULL, DATE_SUB(NOW(), INTERVAL 9 DAY)),
+(2, 1600, "TRANSPORT", "지하철", NULL, NULL, DATE_SUB(NOW(), INTERVAL 10 DAY));
