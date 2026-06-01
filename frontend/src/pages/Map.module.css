@@ -4,7 +4,6 @@
   height: calc(100vh - 56px);
   overflow: hidden;
 }
-
 .sidebar {
   width: 340px;
   min-width: 340px;
@@ -16,32 +15,29 @@
   overflow-y: auto;
   flex-shrink: 0;
 }
-
 .map {
   width: 100%;
   height: 100%;
 }
-
 .section {
-  padding: 16px 16px;
+  padding: 16px 18px;
   border-bottom: 0.5px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
 }
-
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
-
 .sectionTitle {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-primary);
   margin-bottom: 10px;
   display: block;
 }
-
 .resetBtn {
   font-size: 11px;
   color: var(--color-text-secondary);
@@ -51,14 +47,12 @@
   padding: 0;
 }
 .resetBtn:hover { color: var(--color-primary); }
-
 .categoryRow {
   display: flex;
   flex-wrap: nowrap;
-  gap: 8px;
+  gap: 7px;
   overflow-x: auto;
 }
-
 .catBtn {
   display: flex;
   align-items: center;
@@ -85,7 +79,6 @@
   flex-direction: column;
   gap: 6px;
 }
-
 .cardCheck {
   display: flex;
   align-items: center;
@@ -102,30 +95,26 @@
   border-color: var(--color-primary) !important;
   background: var(--color-primary-light) !important;
 }
-
 .cardCheck input {
   accent-color: var(--color-primary);
   width: 14px;
   height: 14px;
   flex-shrink: 0;
 }
-
 .cardCheckInfo {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex: 1;
 }
-
 .cardCheckName {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
-
 .cardCheckRate {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* 상태 박스 */
@@ -136,8 +125,8 @@
   justify-content: center;
   padding: 24px 16px;
   gap: 8px;
+  flex: 1;
 }
-
 .stateText {
   font-size: 12px;
   color: var(--color-text-secondary);
@@ -149,15 +138,13 @@
 .storeInfo {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 13px;
 }
-
 .storeNameRow {
   display: flex;
   align-items: flex-start;
   gap: 10px;
 }
-
 .storeIconBox {
   width: 36px;
   height: 36px;
@@ -167,28 +154,24 @@
   justify-content: center;
   flex-shrink: 0;
 }
-
 .storeName {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-primary);
   margin: 0 0 2px;
   line-height: 1.4;
 }
-
 .storeAddress {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--color-text-secondary);
   margin: 0;
   line-height: 1.4;
 }
-
 .storeMetaRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
 .storeTag {
   display: inline-flex;
   align-items: center;
@@ -200,7 +183,6 @@
   font-size: 11px;
   color: var(--color-text-secondary);
 }
-
 .storeDistance {
   font-size: 11px;
   color: var(--color-text-secondary);
@@ -212,7 +194,6 @@
   flex-direction: column;
   gap: 5px;
 }
-
 .benefitItem {
   display: flex;
   justify-content: space-between;
@@ -222,47 +203,39 @@
   border-radius: 8px;
   border: 0.5px solid var(--color-border);
 }
-
 .benefitItem.best {
   background: var(--color-primary-light);
   border-color: var(--color-primary);
 }
-
 .benefitLeft {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
 .benefitBadge {
   font-size: 10px;
   padding: 2px 7px;
   border-radius: 20px;
   font-weight: 500;
 }
-
 .bestBadge {
   background: var(--color-primary);
   color: white;
 }
-
 .normalBadge {
   background: #F1F5F9;
   color: var(--color-text-secondary);
   border: 0.5px solid var(--color-border);
 }
-
 .benefitCardName {
   font-size: 12px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
-
 .benefitRate {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
 }
-
 .nobenefitBox {
   display: flex;
   align-items: center;
@@ -279,7 +252,6 @@
   padding: 14px 18px;
   margin-top: auto;
 }
-
 .tipBox {
   display: flex;
   align-items: flex-start;
@@ -308,14 +280,12 @@
   z-index: 10;
   pointer-events: none;
 }
-
 .legendTitle {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text-primary);
   margin: 0 0 2px;
 }
-
 .legendItem {
   display: flex;
   align-items: center;
@@ -323,7 +293,6 @@
   font-size: 11px;
   color: var(--color-text-secondary);
 }
-
 .legendDot {
   width: 10px;
   height: 10px;

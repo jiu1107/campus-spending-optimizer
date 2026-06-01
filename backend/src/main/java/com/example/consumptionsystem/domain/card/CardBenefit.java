@@ -29,7 +29,7 @@ public class CardBenefit {
     @Enumerated(EnumType.STRING)
     private BenefitType benefitType;
 
-    @Column(name = "benefit_value", nullable = false, precision = 5, scale = 2)
+    @Column(name = "benefit_value", nullable = false, precision = 10, scale = 4)
     private BigDecimal benefitValue;
 
     @Column(name = "requirement_min", nullable = false)

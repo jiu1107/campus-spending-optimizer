@@ -37,15 +37,21 @@ function Signup() {
     }
   }
 
-  const inputStyle = { width: '100%', height: '40px', border: '0.5px solid #d1d5db', borderRadius: '8px', padding: '0 12px', fontSize: '14px', outline: 'none', color: 'var(--color-text-primary)' }
+  // 엔터키 제출
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSubmit()
+  }
+
+  const inputStyle = {
+    width: '100%', height: '40px', border: '0.5px solid #d1d5db',
+    borderRadius: '8px', padding: '0 12px', fontSize: '14px',
+    outline: 'none', color: 'var(--color-text-primary)',
+    boxSizing: 'border-box',
+  }
   const labelStyle = { display: 'block', fontSize: '13px', color: '#6b7280', marginBottom: '5px' }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f5f6f8', display: 'flex', flexDirection: 'column' }}>
-      <nav style={{ background: 'white', borderBottom: '0.5px solid #e5e7eb', padding: '0 24px', height: '52px', display: 'flex', alignItems: 'center' }}>
-        <span style={{ color: '#0076F1', fontSize: '15px', fontWeight: '500' }}>💳 소비최적화</span>
-      </nav>
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 16px' }}>
         <div style={{ background: 'white', borderRadius: '12px', border: '0.5px solid #e5e7eb', padding: '32px 28px', width: '100%', maxWidth: '400px' }}>
           <h1 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '4px' }}>회원가입</h1>
@@ -53,22 +59,19 @@ function Signup() {
 
           <div style={{ marginBottom: '14px' }}>
             <label style={labelStyle}>닉네임</label>
-            <input type="text" name="nickname" placeholder="닉네임을 입력하세요" value={form.nickname} onChange={handleChange} style={inputStyle} />
+            <input type="text" name="nickname" placeholder="닉네임을 입력하세요" value={form.nickname} onChange={handleChange} onKeyDown={handleKeyDown} style={inputStyle} />
           </div>
-
           <div style={{ marginBottom: '14px' }}>
             <label style={labelStyle}>이메일</label>
-            <input type="email" name="email" placeholder="example@email.com" value={form.email} onChange={handleChange} style={inputStyle} />
+            <input type="email" name="email" placeholder="example@email.com" value={form.email} onChange={handleChange} onKeyDown={handleKeyDown} style={inputStyle} />
           </div>
-
           <div style={{ marginBottom: '14px' }}>
             <label style={labelStyle}>비밀번호</label>
-            <input type="password" name="password" placeholder="8자 이상 입력하세요" value={form.password} onChange={handleChange} style={inputStyle} />
+            <input type="password" name="password" placeholder="8자 이상 입력하세요" value={form.password} onChange={handleChange} onKeyDown={handleKeyDown} style={inputStyle} />
           </div>
-
           <div style={{ marginBottom: '8px' }}>
             <label style={labelStyle}>비밀번호 확인</label>
-            <input type="password" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" value={form.passwordConfirm} onChange={handleChange} style={inputStyle} />
+            <input type="password" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" value={form.passwordConfirm} onChange={handleChange} onKeyDown={handleKeyDown} style={inputStyle} />
           </div>
 
           {error && <p style={{ fontSize: '12px', color: '#ef4444', marginBottom: '8px' }}>{error}</p>}

@@ -2,46 +2,12 @@ import { useNavigate } from 'react-router-dom'
 import {
   MdLocationOn, MdCreditCard, MdBarChart,
   MdEmojiEvents, MdArrowForward, MdTrendingUp,
-  MdTrendingDown, MdAttachMoney, MdAutoAwesome,
+  MdAttachMoney, MdAutoAwesome,
   MdRestaurant, MdLocalCafe, MdStorefront,
   MdTheaters, MdShoppingBag, MdNotifications
 } from 'react-icons/md'
 import styles from './Home.module.css'
-
-// Mock 데이터 — 추후 API로 교체
-const mockUser = {
-  nickname: localStorage.getItem('nickname') || '사용자',
-}
-
-const mockSummary = {
-  totalSpend: 147500,
-  savedAmount: 12500,
-  completedCards: 1,
-  completedCardName: 'KB국민 노리2',
-  prevMonthDiff: 12000,
-}
-
-const mockConsumption = {
-  식비: { amount: 87000, budget: 150000 },
-  카페: { amount: 32000, budget: 50000 },
-  편의점: { amount: 23000, budget: 30000 },
-}
-
-const mockRecommend = {
-  rank: 1,
-  cardName: 'KB국민 노리2',
-  category: '식비',
-  rate: 5,
-  expectedAmount: 4350,
-  consumption: 87000,
-}
-
-const mockPerformance = {
-  current: 180000,
-  target: 300000,
-  remaining: 120000,
-  remainingDays: 18,
-}
+import campusMap from '../assets/img/campus_map.png'
 
 const CATEGORY_ICONS = {
   식비: MdRestaurant,
@@ -59,9 +25,65 @@ const CATEGORY_COLORS = {
   쇼핑: '#378ADD',
 }
 
-function Home() {
-  const navigate = useNavigate()
+const PERFORMANCE_GOAL = 300000
 
+function Home({ currentBudgets = {}, currentDate, userCards = [], expenses = [] }) {
+  const navigate = useNavigate()
+  const nickname = localStorage.getItem('nickname') || '사용자'
+
+  // 이번달 소비 내역만 필터링
+  const currentYearMonthStr = currentDate
+    ? `${currentDate.year}-${String(currentDate.month).padStart(2, '0')}`
+    : ''
+  const monthlyExpenses = expenses.filter(exp => exp.date?.startsWith(currentYearMonthStr))
+
+  // 카테고리별 소비 합산
+  const categorySpend = monthlyExpenses.reduce((acc, exp) => {
+    if (exp.category) acc[exp.category] = (acc[exp.category] || 0) + exp.amount
+    return acc
+  }, {})
+
+  // 총 지출
+  const totalSpend = monthlyExpenses.reduce((sum, exp) => sum + exp.amount, 0)
+  const totalBudget = Object.values(currentBudgets).reduce((sum, v) => sum + v, 0)
+  const savedAmount = Math.max(totalBudget - totalSpend, 0)
+
+  // 달성 완료 카드 (실적 300,000원 이상)
+  const getCardSpent = (card) =>
+    monthlyExpenses
+      .filter(exp => exp.card && (
+        exp.card.includes(card.card_name) ||
+        exp.card.includes(card.card_name?.replace(' 체크카드', '') || '')
+      ))
+      .reduce((sum, exp) => sum + exp.amount, 0)
+
+  const achievedCards = userCards.filter(c => getCardSpent(c) >= PERFORMANCE_GOAL)
+
+  // 실적에 가장 근접한 카드 (달성률 높은 순)
+  const closestCard = userCards.length > 0
+    ? [...userCards].sort((a, b) => getCardSpent(b) - getCardSpent(a))[0]
+    : null
+  const closestCardSpent = closestCard ? getCardSpent(closestCard) : 0
+
+  const today = new Date()
+  const lastDay = new Date(currentDate?.year, currentDate?.month, 0).getDate()
+  const remainingDays = Math.max(lastDay - today.getDate(), 0)
+
+  // 전체 5개 카테고리 고정 표시 (예산 미설정 시 0)
+  const ALL_CATEGORIES = ['식비', '카페', '편의점', '문화', '쇼핑']
+  const topCategories = ALL_CATEGORIES.map(cat => ({
+    cat,
+    amount: categorySpend[cat] || 0,
+    budget: currentBudgets[cat] || 0,
+  }))
+
+  // 카드 추천 - 가장 예상 혜택 높은 카드
+  const topCard = userCards.length > 0 ? userCards.reduce((best, card) => {
+    const totalBenefit = Object.entries(card.benefits || {}).reduce((sum, [cat, rate]) => {
+      return sum + Math.round((categorySpend[cat] || 0) * rate / 100)
+    }, 0)
+    return totalBenefit > (best.benefit || 0) ? { ...card, benefit: totalBenefit } : best
+  }, { benefit: 0 }) : null
 
   return (
     <div className={styles.page}>
@@ -71,16 +93,11 @@ function Home() {
         <div className={styles.header}>
           <div>
             <h1 className={styles.greeting}>
-              안녕하세요 <span className={styles.userName}>{mockUser.nickname}</span>님
+              안녕하세요 <span className={styles.userName}>{nickname}</span>님
             </h1>
-            <p className={styles.greetingSub}>
-              이번달 소비 현황을 확인해보세요
-            </p>
+            <p className={styles.greetingSub}>이번달 소비 현황을 확인해보세요</p>
           </div>
-          <button
-            className={styles.notifyBtn}
-            onClick={() => navigate('/mypage')}
-          >
+          <button className={styles.notifyBtn} onClick={() => navigate('/mypage')}>
             <MdNotifications size={20} />
           </button>
         </div>
@@ -89,32 +106,28 @@ function Home() {
         <div className={styles.summaryGrid}>
           <div className={styles.summaryCard}>
             <p className={styles.summaryLabel}>총 지출</p>
-            <p className={styles.summaryValue}>
-              {mockSummary.totalSpend.toLocaleString()}원
-            </p>
+            <p className={styles.summaryValue}>{totalSpend.toLocaleString()}원</p>
             <div className={`${styles.summaryBadge} ${styles.badgeUp}`}>
               <MdTrendingUp size={12} />
-              전월 대비 +{mockSummary.prevMonthDiff.toLocaleString()}원
+              {currentDate?.month}월 누적 소비
             </div>
           </div>
           <div className={styles.summaryCard}>
             <p className={styles.summaryLabel}>이번달 절약 금액</p>
-            <p className={`${styles.summaryValue} ${styles.valuePrimary}`}>
-              {mockSummary.savedAmount.toLocaleString()}원
-            </p>
+            <p className={`${styles.summaryValue} ${styles.valuePrimary}`}>{savedAmount.toLocaleString()}원</p>
             <div className={`${styles.summaryBadge} ${styles.badgeDown}`}>
-              <MdTrendingDown size={12} />
-              카드 혜택 활용
+              <MdAttachMoney size={12} />
+              예산 대비 절약
             </div>
           </div>
           <div className={styles.summaryCard}>
             <p className={styles.summaryLabel}>달성 완료 카드</p>
-            <p className={`${styles.summaryValue} ${styles.valueSuccess}`}>
-              {mockSummary.completedCards}개
-            </p>
+            <p className={`${styles.summaryValue} ${styles.valueSuccess}`}>{achievedCards.length}개</p>
             <div className={`${styles.summaryBadge} ${styles.badgeSuccess}`}>
               <MdEmojiEvents size={12} />
-              {mockSummary.completedCardName}
+              {achievedCards.length > 0
+                ? achievedCards[0].card_name?.replace(' 체크카드', '')
+                : '달성 카드 없음'}
             </div>
           </div>
         </div>
@@ -122,12 +135,10 @@ function Home() {
         {/* 메인 2열 그리드 */}
         <div className={styles.mainGrid}>
 
-          {/* 좌측 상단 — 카드 혜택 지도 */}
-          <div
-            className={`${styles.featureCard} ${styles.mapCard}`}
-            onClick={() => navigate('/map')}
-          >
-            <div className={styles.featureCardHeader}>
+          {/* 카드 혜택 지도 */}
+          <div className={`${styles.featureCard} ${styles.mapCard}`} onClick={() => navigate('/map')}
+            style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
+            <div className={styles.featureCardHeader} style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1, padding: '14px 16px', background: 'linear-gradient(to bottom, rgba(255,255,255,0.95) 70%, rgba(255,255,255,0))' }}>
               <div className={styles.featureIconWrap}>
                 <MdLocationOn size={18} color="var(--color-primary)" />
               </div>
@@ -137,19 +148,11 @@ function Home() {
               </div>
               <MdArrowForward size={16} color="var(--color-text-secondary)" className={styles.arrowIcon} />
             </div>
-            <div className={styles.mapPreview}>
-              <div className={styles.mapDot} style={{ top: '40%', left: '35%', background: 'var(--color-primary)' }} />
-              <div className={styles.mapDot} style={{ top: '55%', left: '52%', background: '#60A5FA' }} />
-              <div className={styles.mapDot} style={{ top: '30%', left: '60%', background: '#9CA3AF' }} />
-              <div className={styles.mapBadge}>5% 적립</div>
-            </div>
+            <img src={campusMap} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </div>
 
-          {/* 우측 상단 — 소비 패턴 분석 */}
-          <div
-            className={`${styles.featureCard}`}
-            onClick={() => navigate('/analysis')}
-          >
+          {/* 소비 패턴 분석 */}
+          <div className={`${styles.featureCard}`} onClick={() => navigate('/analysis')}>
             <div className={styles.featureCardHeader}>
               <div className={styles.featureIconWrap}>
                 <MdBarChart size={18} color="var(--color-primary)" />
@@ -161,9 +164,15 @@ function Home() {
               <MdArrowForward size={16} color="var(--color-text-secondary)" className={styles.arrowIcon} />
             </div>
             <div className={styles.analysisContent}>
-              {Object.entries(mockConsumption).map(([cat, data]) => {
+              {topCategories.every(({ amount, budget }) => amount === 0 && budget === 0) ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                  <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center' }}>
+                    소비 내역을 입력해보세요
+                  </p>
+                </div>
+              ) : topCategories.map(({ cat, amount, budget }) => {
                 const Icon = CATEGORY_ICONS[cat]
-                const percent = Math.round((data.amount / data.budget) * 100)
+                const percent = budget > 0 ? Math.round((amount / budget) * 100) : 0
                 const isOver = percent >= 80
                 return (
                   <div key={cat} className={styles.analysisRow}>
@@ -176,27 +185,22 @@ function Home() {
                         className={styles.analysisBar}
                         style={{
                           width: `${Math.min(percent, 100)}%`,
-                          background: isOver ? '#EF4444' : CATEGORY_COLORS[cat],
+                          background: isOver ? '#EF4444' : CATEGORY_COLORS[cat]
                         }}
                       />
                     </div>
                     <span className={styles.analysisAmount}>
-                      {data.amount.toLocaleString()} / {data.budget.toLocaleString()}원
+                      {amount.toLocaleString()} / {budget > 0 ? budget.toLocaleString() : '-'}원
                     </span>
-                    {isOver && (
-                      <span className={styles.overBadge}>예산 초과 임박</span>
-                    )}
+
                   </div>
                 )
               })}
             </div>
           </div>
 
-          {/* 좌측 하단 — 카드 추천 */}
-          <div
-            className={`${styles.featureCard}`}
-            onClick={() => navigate('/recommend')}
-          >
+          {/* 카드 추천 */}
+          <div className={`${styles.featureCard}`} onClick={() => navigate('/recommend')}>
             <div className={styles.featureCardHeader}>
               <div className={styles.featureIconWrap}>
                 <MdCreditCard size={18} color="var(--color-primary)" />
@@ -208,46 +212,37 @@ function Home() {
               <MdArrowForward size={16} color="var(--color-text-secondary)" className={styles.arrowIcon} />
             </div>
             <div className={styles.recommendContent}>
-              <div className={styles.recommendBest}>
-                <div className={styles.recommendLeft}>
-                  <span className={styles.rankBadge}>1순위</span>
-                  <span className={styles.recommendCardName}>
-                    {mockRecommend.cardName}
-                  </span>
-                </div>
-                <div className={styles.recommendRight}>
-                  <span className={styles.recommendRate}>
-                    {mockRecommend.rate}% 적립
-                  </span>
-                  <span className={styles.recommendExpected}>
-                    예상 혜택 {mockRecommend.expectedAmount.toLocaleString()}원
-                  </span>
-                </div>
-              </div>
-              <div className={styles.recommendDetail}>
-                <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>
-                    이번달 {mockRecommend.category} 소비
-                  </span>
-                  <span className={styles.detailValue}>
-                    {mockRecommend.consumption.toLocaleString()}원
-                  </span>
-                </div>
-                <div className={styles.detailRow}>
-                  <span className={styles.detailLabel}>적립률</span>
-                  <span className={`${styles.detailValue} ${styles.detailValuePrimary}`}>
-                    x {mockRecommend.rate}% = {mockRecommend.expectedAmount.toLocaleString()}원
-                  </span>
-                </div>
-              </div>
+              {!topCard || topCard.benefit === 0 ? (
+                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>
+                  카드를 등록하고 소비 내역을 입력해보세요
+                </p>
+              ) : (
+                <>
+                  <div className={styles.recommendBest}>
+                    <div className={styles.recommendLeft}>
+                      <span className={styles.rankBadge}>1순위</span>
+                      <span className={styles.recommendCardName}>
+                        {topCard.card_name?.replace(' 체크카드', '')}
+                      </span>
+                    </div>
+                    <div className={styles.recommendRight}>
+                      <span className={styles.recommendRate}>예상 혜택</span>
+                      <span className={styles.recommendExpected}>{topCard.benefit?.toLocaleString()}원</span>
+                    </div>
+                  </div>
+                  <div className={styles.recommendDetail}>
+                    <div className={styles.detailRow}>
+                      <span className={styles.detailLabel}>이번달 총 소비</span>
+                      <span className={styles.detailValue}>{totalSpend.toLocaleString()}원</span>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
-          {/* 우측 하단 — 전월 실적 관리 */}
-          <div
-            className={`${styles.featureCard}`}
-            onClick={() => navigate('/performance')}
-          >
+          {/* 전월 실적 관리 */}
+          <div className={`${styles.featureCard}`} onClick={() => navigate('/performance')}>
             <div className={styles.featureCardHeader}>
               <div className={styles.featureIconWrap}>
                 <MdEmojiEvents size={18} color="var(--color-primary)" />
@@ -259,34 +254,38 @@ function Home() {
               <MdArrowForward size={16} color="var(--color-text-secondary)" className={styles.arrowIcon} />
             </div>
             <div className={styles.performanceContent}>
-              <div className={styles.performanceAmounts}>
-                <span className={styles.performanceCurrent}>
-                  {mockPerformance.current.toLocaleString()}원
-                </span>
-                <span className={styles.performanceDivider}>/</span>
-                <span className={styles.performanceTarget}>
-                  {mockPerformance.target.toLocaleString()}원
-                </span>
-              </div>
-              <div className={styles.performanceBarWrap}>
-                <div
-                  className={styles.performanceBar}
-                  style={{
-                    width: `${Math.round((mockPerformance.current / mockPerformance.target) * 100)}%`
-                  }}
-                />
-              </div>
-              <div className={styles.performanceInfo}>
-                <MdAttachMoney size={14} color="var(--color-primary)" />
-                <span className={styles.performanceInfoText}>
-                  혜택 발동까지{' '}
-                  <strong>{mockPerformance.remaining.toLocaleString()}원</strong> 남았어요
-                </span>
-              </div>
-              <div className={styles.performanceDays}>
-                <MdAutoAwesome size={13} color="var(--color-text-secondary)" />
-                <span>남은 기간 {mockPerformance.remainingDays}일</span>
-              </div>
+              {!closestCard ? (
+                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textAlign: 'center', padding: '16px 0' }}>
+                  카드를 등록해보세요
+                </p>
+              ) : (
+                <>
+                  <p style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>
+                    {closestCard.card_name?.replace(' 체크카드', '')}
+                  </p>
+                  <div className={styles.performanceAmounts}>
+                    <span className={styles.performanceCurrent}>{closestCardSpent.toLocaleString()}원</span>
+                    <span className={styles.performanceDivider}>/</span>
+                    <span className={styles.performanceTarget}>{PERFORMANCE_GOAL.toLocaleString()}원</span>
+                  </div>
+                  <div className={styles.performanceBarWrap}>
+                    <div
+                      className={styles.performanceBar}
+                      style={{ width: `${Math.min(Math.round((closestCardSpent / PERFORMANCE_GOAL) * 100), 100)}%` }}
+                    />
+                  </div>
+                  <div className={styles.performanceInfo}>
+                    <MdAttachMoney size={14} color="var(--color-primary)" />
+                    <span className={styles.performanceInfoText}>
+                      혜택 발동까지 <strong>{Math.max(PERFORMANCE_GOAL - closestCardSpent, 0).toLocaleString()}원</strong> 남았어요
+                    </span>
+                  </div>
+                  <div className={styles.performanceDays}>
+                    <MdAutoAwesome size={13} color="var(--color-text-secondary)" />
+                    <span>남은 기간 {remainingDays}일</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

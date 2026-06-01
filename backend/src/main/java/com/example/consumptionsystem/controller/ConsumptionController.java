@@ -49,4 +49,15 @@ public class ConsumptionController {
         List<CategorySummaryResponse> summary = consumptionService.getCategorySummary(userId, startDate, endDate);
         return ResponseEntity.ok(summary);
     }
+    @DeleteMapping("/{userId}/{consumptionId}")
+public ResponseEntity<?> deleteConsumption(
+        @PathVariable Long userId,
+        @PathVariable Long consumptionId) {
+    try {
+        consumptionService.deleteConsumption(userId, consumptionId);
+        return ResponseEntity.ok().build();
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+}
 }

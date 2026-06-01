@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { IoMdPin } from "react-icons/io"
-import { MdRestaurant, MdLocalCafe, MdStorefront, MdTheaters, MdShoppingBag, MdSearch, MdLocationOff, MdMap, MdInfo } from 'react-icons/md'
+import { MdRestaurant, MdLocalCafe, MdStorefront, MdTheaters, MdShoppingBag, MdSearch, MdLocationOff, MdMap, MdInfo, MdCreditCard } from 'react-icons/md'
 import { renderToStaticMarkup } from 'react-dom/server'
 import styles from './Map.module.css'
 import { CATEGORIES } from '../data/cards'
@@ -52,7 +52,7 @@ const formatDistance = (meters) => {
   return `${meters}m`
 }
 
-function Map() {
+function Map({ userCards: propCards = [] }) {
   const mapRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const markersRef = useRef([])
@@ -65,31 +65,40 @@ function Map() {
   const [isSearching, setIsSearching] = useState(false)
   const [noResult, setNoResult] = useState(false)
 
-  const [userCards] = useState([
-    {
-      id: 1,
-      name: 'KB국민 노리2',
-      benefits: {
-        식비: { rate: 5, brands: [] },
-        카페: { rate: 3, brands: ['스타벅스', '투썸', '이디야'] },
-        편의점: { rate: 2, brands: ['CU'] },
-        문화: { rate: 0, brands: [] },
-        쇼핑: { rate: 0, brands: [] },
-      }
-    },
-    {
-      id: 2,
-      name: '신한 Hey Young',
-      benefits: {
-        식비: { rate: 3, brands: ['맥도날드', '버거킹', '롯데리아'] },
-        카페: { rate: 10, brands: ['스타벅스', '메가커피'] },
-        편의점: { rate: 5, brands: ['GS25', 'GS'] },
-        문화: { rate: 15, brands: ['CGV', '메가박스', '롯데시네마'] },
-        쇼핑: { rate: 5, brands: ['올리브영'] },
-      }
-    },
-  ])
-  const [checkedCards, setCheckedCards] = useState([1, 2])
+  const userCards = propCards.map(card => ({
+    id: card.id,
+    name: card.card_name?.replace(' 체크카드', ''),
+    benefits: {
+      식비: { rate: card.benefits?.식비 || 0, brands: [] },
+      카페: { rate: card.benefits?.카페 || 0, brands: [] },
+      편의점: { rate: card.benefits?.편의점 || 0, brands: [] },
+      문화: { rate: card.benefits?.문화 || 0, brands: [] },
+      쇼핑: { rate: card.benefits?.쇼핑 || 0, brands: [] },
+    }
+  }))
+
+  // 1번 수정: propCards가 비동기로 늦게 와도 checkedCards 동기화
+  const [checkedCards, setCheckedCards] = useState([])
+  const initializedRef = useRef(false)
+
+  useEffect(() => {
+    if (propCards.length > 0 && !initializedRef.current) {
+      setCheckedCards(userCards.map(card => card.id))
+      initializedRef.current = true
+    }
+  }, [propCards])
+
+  // stale closure 방지용 ref
+  const checkedCardsRef = useRef(checkedCards)
+  const selectedCategoryRef = useRef(selectedCategory)
+
+  useEffect(() => {
+    checkedCardsRef.current = checkedCards
+  }, [checkedCards])
+
+  useEffect(() => {
+    selectedCategoryRef.current = selectedCategory
+  }, [selectedCategory])
 
   useEffect(() => {
     const checkKakaoLoaded = setInterval(() => {
@@ -141,7 +150,9 @@ function Map() {
   }, [])
 
   const toggleCard = (cardId) => {
-    setCheckedCards(prev => prev.includes(cardId) ? prev.filter(id => id !== cardId) : [...prev, cardId])
+    setCheckedCards(prev =>
+      prev.includes(cardId) ? prev.filter(id => id !== cardId) : [...prev, cardId]
+    )
   }
 
   const handleCategorySelect = (category) => {
@@ -155,7 +166,7 @@ function Map() {
   const getBestCardBenefit = (category, storeName = '') => {
     if (!category) return []
     return userCards
-      .filter(card => checkedCards.includes(card.id))
+      .filter(card => checkedCardsRef.current.includes(card.id))
       .map(card => {
         const benefit = card.benefits[category]
         if (!benefit || benefit.rate === undefined) return { cardName: card.name, rate: 0 }
@@ -174,11 +185,11 @@ function Map() {
       <div style="background:white;border:1.5px solid #0076F1;border-radius:12px;padding:12px 14px;min-width:180px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-family:KoPubDotum,sans-serif;cursor:pointer;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
           <span style="display:flex;align-items:center;color:#0076F1;">${iconHtml}</span>
-          <span style="font-size:13px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">${store.place_name}</span>
+          <span style="font-size:13px;font-weight:500;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">${store.place_name}</span>
         </div>
         <div style="background:#E6F1FB;border-radius:8px;padding:8px 10px;">
           <div style="font-size:11px;color:#0076F1;font-weight:500;margin-bottom:2px;">${bestCard?.rate > 0 ? '1순위 ' + bestCard.cardName : '혜택 없음'}</div>
-          <div style="font-size:16px;font-weight:700;color:#0076F1;">${bestCard?.rate > 0 ? bestCard.rate + '% 적립' : '-'}</div>
+          <div style="font-size:16px;font-weight:500;color:#0076F1;">${bestCard?.rate > 0 ? bestCard.rate + '% 적립' : '-'}</div>
         </div>
       </div>`
     const overlay = new window.kakao.maps.CustomOverlay({ position, content, yAnchor: 1.5 })
@@ -191,10 +202,7 @@ function Map() {
     const position = new window.kakao.maps.LatLng(store.y, store.x)
     const benefits = getBestCardBenefit(category, store.place_name)
     const maxRate = benefits.length > 0 ? Math.max(...benefits.map(b => b.rate)) : 0
-    const allRates = userCards.map(card => card.benefits[category]?.rate || 0)
-    const globalMax = allRates.length > 0 ? Math.max(...allRates) : 0
-    let markerColor = '#9CA3AF'
-    if (maxRate > 0) markerColor = maxRate === globalMax ? '#0076F1' : '#60A5FA'
+    const markerColor = maxRate > 0 ? '#0076F1' : '#9CA3AF'
 
     const markerContent = document.createElement('div')
     markerContent.innerHTML = `
@@ -231,8 +239,10 @@ function Map() {
       markersRef.current.forEach(marker => marker.setMap(null))
       markersRef.current = []
       if (clustererRef.current) clustererRef.current.clear()
+      if (infoOverlayRef.current) { infoOverlayRef.current.setMap(null); infoOverlayRef.current = null }
       setIsSearching(true)
       setNoResult(false)
+      setSelectedStore(null)
 
       const handleResult = (result, status) => {
         setIsSearching(false)
@@ -267,6 +277,13 @@ function Map() {
       }
     })
   }
+
+  // 카드 체크 변경 시 마커 자동 갱신
+  useEffect(() => {
+    if (selectedCategoryRef.current && mapInstanceRef.current) {
+      searchNearbyStores(selectedCategoryRef.current)
+    }
+  }, [checkedCards])
 
   const handleReset = () => {
     setSelectedCategory(null)
@@ -314,21 +331,28 @@ function Map() {
         {/* 보유 카드 선택 */}
         <div className={styles.section}>
           <span className={styles.sectionTitle}>보유 카드 선택</span>
-          <div className={styles.cardList}>
-            {userCards.map(card => (
-              <label key={card.id} className={`${styles.cardCheck} ${checkedCards.includes(card.id) ? styles.cardChecked : ''}`}>
-                <input type="checkbox" checked={checkedCards.includes(card.id)} onChange={() => toggleCard(card.id)} />
-                <div className={styles.cardCheckInfo}>
-                  <span className={styles.cardCheckName}>{card.name}</span>
-                  {selectedCategory && (
-                    <span className={styles.cardCheckRate} style={{ color: card.benefits[selectedCategory]?.rate > 0 ? '#0076F1' : '#9ca3af' }}>
-                      {card.benefits[selectedCategory]?.rate > 0 ? `${card.benefits[selectedCategory].rate}% 적립` : '혜택 없음'}
-                    </span>
-                  )}
-                </div>
-              </label>
-            ))}
-          </div>
+          {userCards.length === 0 ? (
+            <div className={styles.stateBox}>
+              <MdCreditCard size={24} color="#9ca3af" />
+              <p className={styles.stateText}>마이페이지에서 카드를 등록해주세요</p>
+            </div>
+          ) : (
+            <div className={styles.cardList}>
+              {userCards.map(card => (
+                <label key={card.id} className={`${styles.cardCheck} ${checkedCards.includes(card.id) ? styles.cardChecked : ''}`}>
+                  <input type="checkbox" checked={checkedCards.includes(card.id)} onChange={() => toggleCard(card.id)} />
+                  <div className={styles.cardCheckInfo}>
+                    <span className={styles.cardCheckName}>{card.name}</span>
+                    {selectedCategory && (
+                      <span className={styles.cardCheckRate} style={{ color: card.benefits[selectedCategory]?.rate > 0 ? '#0076F1' : '#9ca3af' }}>
+                        {card.benefits[selectedCategory]?.rate > 0 ? `${card.benefits[selectedCategory].rate}% 적립` : '혜택 없음'}
+                      </span>
+                    )}
+                  </div>
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 선택한 가게 정보 */}
@@ -425,8 +449,7 @@ function Map() {
         <div className={styles.legend}>
           <p className={styles.legendTitle}>혜택 안내</p>
           {[
-            { color: '#0076F1', label: '최고 혜택 가게' },
-            { color: '#60A5FA', label: '혜택 있는 가게' },
+            { color: '#0076F1', label: '혜택 있는 가게' },
             { color: '#9CA3AF', label: '혜택 없는 가게' },
           ].map(item => (
             <div key={item.label} className={styles.legendItem}>

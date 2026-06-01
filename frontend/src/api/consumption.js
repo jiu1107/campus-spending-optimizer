@@ -35,7 +35,7 @@ export const getConsumptions = async (year, month) => {
     place: c.storeName,
     category: CATEGORY_MAP_REVERSE[c.category] || c.category,
     amount: c.amount,
-    card: '',
+    card: c.cardName || '',
   }))
 }
 
@@ -49,6 +49,7 @@ export const createConsumption = async (data) => {
     consumedAt: `${data.date}T${new Date().toTimeString().substring(0, 8)}`,
     latitude: null,
     longitude: null,
+    cardName: data.card || null,
   })
   return res.data
 }
@@ -68,4 +69,11 @@ export const getConsumptionSummary = async (year, month) => {
 const getDayName = (dateStr) => {
   const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일']
   return days[new Date(dateStr).getDay()]
+}
+
+// 소비 내역 삭제
+export const deleteConsumption = async (consumptionId) => {
+  const userId = getUserId()
+  const res = await instance.delete(`/api/consumptions/${userId}/${consumptionId}`)
+  return res.data
 }

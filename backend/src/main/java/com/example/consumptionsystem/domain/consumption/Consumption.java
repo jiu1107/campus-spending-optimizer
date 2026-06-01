@@ -40,6 +40,9 @@ public class Consumption {
     @Column(name = "consumed_at", nullable = false)
     private LocalDateTime consumedAt;
 
+    @Column(name = "card_name")
+    private String cardName;
+
     public enum Category {
         FOOD, CAFE, TRANSPORT, SHOPPING, ENTERTAINMENT, EDUCATION, HEALTH, CONVENIENCE_STORE, CULTURE, ETC
     }

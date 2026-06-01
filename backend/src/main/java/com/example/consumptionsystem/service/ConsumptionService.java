@@ -35,6 +35,7 @@ public class ConsumptionService {
         consumption.setLatitude(request.getLatitude());
         consumption.setLongitude(request.getLongitude());
         consumption.setConsumedAt(request.getConsumedAt());
+        consumption.setCardName(request.getCardName());
 
         return consumptionRepository.save(consumption);
     }
@@ -58,4 +59,13 @@ public class ConsumptionService {
                 ))
                 .collect(Collectors.toList());
     }
+    @Transactional
+public void deleteConsumption(Long userId, Long consumptionId) {
+    Consumption consumption = consumptionRepository.findById(consumptionId)
+            .orElseThrow(() -> new IllegalArgumentException("Consumption not found"));
+    if (!consumption.getUser().getId().equals(userId)) {
+        throw new IllegalArgumentException("Unauthorized");
+    }
+    consumptionRepository.delete(consumption);
+}
 }

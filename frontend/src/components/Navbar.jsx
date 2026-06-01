@@ -17,25 +17,31 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
 
   useEffect(() => {
+    // 커스텀 이벤트로 같은 탭 로그아웃 감지
     const checkLogin = () => setIsLoggedIn(!!localStorage.getItem('token'))
     window.addEventListener('storage', checkLogin)
+    window.addEventListener('authChange', checkLogin) // ← 커스텀 이벤트 추가
     checkLogin()
-    return () => window.removeEventListener('storage', checkLogin)
+    return () => {
+      window.removeEventListener('storage', checkLogin)
+      window.removeEventListener('authChange', checkLogin)
+    }
   }, [])
 
   return (
     <nav className={styles.nav}>
       <Link to="/" className={styles.logo}>
-        <FaCreditCard /> 소비최적화
+        <span className={styles.logoIcon}>
+          <FaCreditCard size={14} />
+        </span>
+        소비최적화
       </Link>
       <ul className={styles.menu}>
         {NAV_ITEMS.map((item) => (
           <li key={item.path}>
             <Link
               to={item.path}
-              className={`${styles.menuItem} ${
-                location.pathname === item.path ? styles.active : ''
-              }`}
+              className={`${styles.menuItem} ${location.pathname === item.path ? styles.active : ''}`}
             >
               {item.label}
             </Link>

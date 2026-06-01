@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MdGridView, MdRestaurant, MdLocalCafe,
@@ -6,7 +6,7 @@ import {
   MdTrendingUp, MdCreditCard, MdAttachMoney, MdAutoAwesome
 } from 'react-icons/md'
 import styles from './Recommend.module.css'
-import { mockCards, mockConsumption, CATEGORIES } from '../data/cards'
+import { CATEGORIES } from '../data/cards'
 
 const CATEGORY_META = {
   전체: { icon: MdGridView, color: '#6b7280' },
@@ -34,16 +34,77 @@ const CATEGORY_COLORS = {
   쇼핑: '#378ADD',
 }
 
-const mockUserCards = mockCards
-const hasConsumption = Object.values(mockConsumption).some(v => v > 0)
-const hasCards = mockUserCards.length > 0
-
-function Recommend() {
+function Recommend({ userCards = [] }) {
   const [selectedCategory, setSelectedCategory] = useState('식비')
   const navigate = useNavigate()
   const isTotal = selectedCategory === '전체'
   const allCategories = ['전체', ...CATEGORIES]
-  const totalConsumption = Object.values(mockConsumption).reduce((a, b) => a + b, 0)
+  
+const [recommendedCards, setRecommendedCards] = useState([])
+const [consumption, setConsumption] = useState({ 식비: 0, 카페: 0, 편의점: 0, 문화: 0, 쇼핑: 0 })
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const { getConsumptions } = await import('../api/consumption')
+      const now = new Date()
+      const consumptions = await getConsumptions(now.getFullYear(), now.getMonth() + 1)
+      const summary = { 식비: 0, 카페: 0, 편의점: 0, 문화: 0, 쇼핑: 0 }
+      consumptions.forEach(c => {
+        if (summary[c.category] !== undefined) {
+          summary[c.category] += c.amount
+        }
+      })
+      setConsumption(summary)
+      // 유저 등록 카드 기준으로 추천 데이터 생성
+      const mapped = userCards.map(card => ({
+        cardId: card.id,
+        cardName: card.card_name,
+        company: card.company,
+        benefits: {
+          FOOD: (card.benefits?.식비 || 0) / 100,
+          CAFE: (card.benefits?.카페 || 0) / 100,
+          CONVENIENCE_STORE: (card.benefits?.편의점 || 0) / 100,
+          CULTURE: (card.benefits?.문화 || 0) / 100,
+          SHOPPING: (card.benefits?.쇼핑 || 0) / 100,
+        },
+        maxBenefitValue: Math.max(...Object.values(card.benefits || {}).map(v => v / 100)),
+        recommendedCategory: '',
+        recommendationScore: 0,
+      }))
+      setRecommendedCards(mapped)
+    } catch (err) {
+      console.error('데이터 조회 실패:', err)
+    }
+  }
+  if (userCards.length > 0) fetchData()
+}, [userCards])
+
+const CATEGORY_MAP = {
+  FOOD: '식비', CAFE: '카페', CONVENIENCE_STORE: '편의점',
+  CULTURE: '문화', SHOPPING: '쇼핑'
+}
+
+const hasCards = userCards.length > 0
+const hasConsumption = recommendedCards.length > 0
+
+const mockConsumption = consumption
+const totalConsumption = Object.values(consumption).reduce((a, b) => a + b, 0)
+
+const mockUserCards = recommendedCards.map(card => ({
+  card_id: card.cardId,
+  card_name: card.cardName,
+  benefits: {
+    식비: { rate: (card.benefits?.FOOD || 0) * 100, brands: [] },
+카페: { rate: (card.benefits?.CAFE || 0) * 100, brands: [] },
+편의점: { rate: (card.benefits?.CONVENIENCE_STORE || 0) * 100, brands: [] },
+문화: { rate: (card.benefits?.CULTURE || 0) * 100, brands: [] },
+쇼핑: { rate: (card.benefits?.SHOPPING || 0) * 100, brands: [] },
+  },
+  recommendedCategory: CATEGORY_MAP[card.recommendedCategory] || '',
+  recommendationScore: card.recommendationScore,
+  maxBenefitValue: card.maxBenefitValue,
+}))
 
   const getBestCardPerCategory = () => {
     return CATEGORIES.map(category => {
@@ -98,11 +159,14 @@ function Recommend() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <h1 className={styles.pageTitle}>카드 추천</h1>
-          <div className={styles.emptyWrap}>
-            <MdCreditCard size={48} color="#D1D5DB" />
-            <p className={styles.emptyTitle}>등록된 카드가 없어요</p>
-            <p className={styles.emptySub}>카드를 등록하면 소비 패턴에 맞는 카드를 추천해드려요</p>
-            <button className={styles.emptyBtn} onClick={() => navigate('/mypage')}>
+          <div style={{ background: 'white', borderRadius: '12px', border: '0.5px solid var(--color-border)', padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+            <MdCreditCard size={40} color="#d1d5db" />
+            <p style={{ fontSize: '14px', fontWeight: '500', color: 'var(--color-text-primary)' }}>등록된 카드가 없어요</p>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>카드를 등록하면 소비 패턴에 맞는 카드를 추천해드려요</p>
+            <button
+              onClick={() => navigate('/mypage')}
+              style={{ marginTop: '8px', padding: '10px 20px', background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
+            >
               카드 등록하러 가기
             </button>
           </div>
@@ -111,24 +175,53 @@ function Recommend() {
     )
   }
 
-  // E1: 소비 내역 없음
-  if (!hasConsumption) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.inner}>
-          <h1 className={styles.pageTitle}>카드 추천</h1>
-          <div className={styles.emptyWrap}>
-            <MdTrendingUp size={48} color="#D1D5DB" />
-            <p className={styles.emptyTitle}>소비 내역이 없어요</p>
-            <p className={styles.emptySub}>소비 내역을 입력하면 더 정확한 카드 추천을 받을 수 있어요</p>
-            <button className={styles.emptyBtn} onClick={() => navigate('/analysis')}>
-              소비 내역 입력하러 가기
-            </button>
-          </div>
+  // E3. 적합한 혜택 카드 없음
+const hasAnyBenefit = mockUserCards.some(card =>
+  Object.values(card.benefits).some(b => b.rate > 0)
+)
+
+if (hasCards && hasConsumption && !hasAnyBenefit) {
+  return (
+    <div className={styles.page}>
+      <div className={styles.inner}>
+        <h1 className={styles.pageTitle}>카드 추천</h1>
+        <div style={{ background: 'white', borderRadius: '12px', border: '0.5px solid var(--color-border)', padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          <MdCreditCard size={40} color="#d1d5db" />
+          <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--color-text-primary)' }}>적합한 혜택 카드가 없어요</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>등록된 카드의 혜택이 현재 소비 카테고리와 맞지 않아요</p>
+          <button
+            onClick={() => navigate('/mypage')}
+            style={{ marginTop: '8px', padding: '10px 20px', background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
+          >
+            카드 변경하러 가기
+          </button>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+  // E1: 소비 내역 없음
+  if (!hasConsumption) {
+  return (
+    <div className={styles.page}>
+      <div className={styles.inner}>
+        <h1 className={styles.pageTitle}>카드 추천</h1>
+        <div style={{ background: 'white', borderRadius: '12px', border: '0.5px solid var(--color-border)', padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          <MdTrendingUp size={40} color="#d1d5db" />
+          <p style={{ fontSize: '14px', fontWeight: '600', color: 'var(--color-text-primary)' }}>소비 내역이 없어요</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>소비 내역을 입력하면 더 정확한 카드 추천을 받을 수 있어요</p>
+          <button
+            onClick={() => navigate('/analysis')}
+            style={{ marginTop: '8px', padding: '10px 20px', background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '500', cursor: 'pointer' }}
+          >
+            소비 내역 입력하러 가기
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
   return (
     <div className={styles.page}>

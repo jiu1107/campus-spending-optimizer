@@ -24,6 +24,7 @@ function Login() {
       localStorage.setItem('token', res.accessToken)
       localStorage.setItem('nickname', res.nickname)
       localStorage.setItem('userId', res.userId)
+      window.dispatchEvent(new Event('authChange')) // ← Navbar 갱신
       navigate('/')
     } catch {
       setError('이메일 또는 비밀번호가 올바르지 않습니다.')
@@ -32,12 +33,20 @@ function Login() {
     }
   }
 
+  // 엔터키 제출
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSubmit()
+  }
+
+  const inputStyle = {
+    width: '100%', height: '40px', border: '0.5px solid #d1d5db',
+    borderRadius: '8px', padding: '0 12px', fontSize: '14px',
+    outline: 'none', color: 'var(--color-text-primary)',
+    boxSizing: 'border-box',
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#f5f6f8', display: 'flex', flexDirection: 'column' }}>
-      <nav style={{ background: 'white', borderBottom: '0.5px solid #e5e7eb', padding: '0 24px', height: '52px', display: 'flex', alignItems: 'center' }}>
-        <span style={{ color: '#0076F1', fontSize: '15px', fontWeight: '500' }}>💳 소비최적화</span>
-      </nav>
-
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px 16px' }}>
         <div style={{ background: 'white', borderRadius: '12px', border: '0.5px solid #e5e7eb', padding: '32px 28px', width: '100%', maxWidth: '400px' }}>
           <h1 style={{ fontSize: '18px', fontWeight: '500', marginBottom: '4px' }}>로그인</h1>
@@ -51,10 +60,10 @@ function Login() {
               placeholder="example@email.com"
               value={form.email}
               onChange={handleChange}
-              style={{ width: '100%', height: '40px', border: '0.5px solid #d1d5db', borderRadius: '8px', padding: '0 12px', fontSize: '14px', outline: 'none', color: 'var(--color-text-primary)' }}
+              onKeyDown={handleKeyDown}
+              style={inputStyle}
             />
           </div>
-
           <div style={{ marginBottom: '8px' }}>
             <label style={{ display: 'block', fontSize: '13px', color: '#6b7280', marginBottom: '5px' }}>비밀번호</label>
             <input
@@ -63,7 +72,8 @@ function Login() {
               placeholder="비밀번호를 입력하세요"
               value={form.password}
               onChange={handleChange}
-              style={{ width: '100%', height: '40px', border: '0.5px solid #d1d5db', borderRadius: '8px', padding: '0 12px', fontSize: '14px', outline: 'none', color: 'var(--color-text-primary)' }}
+              onKeyDown={handleKeyDown}
+              style={inputStyle}
             />
           </div>
 
