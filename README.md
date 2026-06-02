@@ -65,10 +65,10 @@ campus-spending-optimizer/
 ## 브랜치 전략
 main        # 최종 시연용
 └── develop # 통합 브랜치
-├── feature/teamA
-├── feature/teamB
-├── feature/teamC
-└── feature/teamD
+├── feature/frontendA
+├── feature/frontendB
+├── feature/backendA
+└── feature/backendB
 
 ## 커밋 메시지 규칙
 feat:     새로운 기능 추가
