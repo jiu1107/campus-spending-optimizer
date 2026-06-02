@@ -3,19 +3,12 @@ import instance from './instance'
 const getUserId = () => localStorage.getItem('userId')
 
 const CATEGORY_MAP = {
-  식비: 'FOOD',
-  카페: 'CAFE',
-  편의점: 'CONVENIENCE_STORE',
-  문화: 'CULTURE',
-  쇼핑: 'SHOPPING',
+  식비: 'FOOD', 카페: 'CAFE', 편의점: 'CONVENIENCE_STORE',
+  문화: 'CULTURE', 쇼핑: 'SHOPPING',
 }
-
 const CATEGORY_MAP_REVERSE = {
-  FOOD: '식비',
-  CAFE: '카페',
-  CONVENIENCE_STORE: '편의점',
-  CULTURE: '문화',
-  SHOPPING: '쇼핑',
+  FOOD: '식비', CAFE: '카페', CONVENIENCE_STORE: '편의점',
+  CULTURE: '문화', SHOPPING: '쇼핑',
 }
 
 // 소비 내역 조회
@@ -27,7 +20,6 @@ export const getConsumptions = async (year, month) => {
   const res = await instance.get(`/api/consumptions/${userId}`, {
     params: { startDate, endDate }
   })
-  // 백엔드 응답을 프론트 형식으로 변환
   return res.data.map(c => ({
     id: c.id,
     date: c.consumedAt.substring(0, 10),
@@ -43,6 +35,21 @@ export const getConsumptions = async (year, month) => {
 export const createConsumption = async (data) => {
   const userId = getUserId()
   const res = await instance.post(`/api/consumptions/${userId}`, {
+    amount: Number(data.amount),
+    category: CATEGORY_MAP[data.category] || data.category,
+    storeName: data.place,
+    consumedAt: `${data.date}T${new Date().toTimeString().substring(0, 8)}`,
+    latitude: null,
+    longitude: null,
+    cardName: data.card || null,
+  })
+  return res.data
+}
+
+// 소비 내역 수정
+export const updateConsumption = async (consumptionId, data) => {
+  const userId = getUserId()
+  const res = await instance.put(`/api/consumptions/${userId}/${consumptionId}`, {
     amount: Number(data.amount),
     category: CATEGORY_MAP[data.category] || data.category,
     storeName: data.place,
