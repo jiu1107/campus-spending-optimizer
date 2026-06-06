@@ -1,0 +1,87 @@
+[
+  {
+    "cardId": 1,
+    "cardName": "신한 Hey Young 체크카드",
+    "company": "신한",
+    "benefits": [
+      { "category": "CAFE", "benefitType": "DISCOUNT", "benefitValue": 0.10, "requirementMin": 200000, "description": "카페 10% 캐시백" },
+      { "category": "CULTURE", "benefitType": "DISCOUNT", "benefitValue": 0.15, "requirementMin": 200000, "description": "문화 15% 캐시백" },
+      { "category": "SHOPPING", "benefitType": "DISCOUNT", "benefitValue": 0.05, "requirementMin": 200000, "description": "쇼핑 5% 캐시백" }
+    ]
+  },
+  {
+    "cardId": 2,
+    "cardName": "하나 1Q 체크카드",
+    "company": "하나",
+    "benefits": [
+      { "category": "CAFE", "benefitType": "POINT", "benefitValue": 0.05, "requirementMin": 200000, "description": "카페 5% 적립" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "POINT", "benefitValue": 0.05, "requirementMin": 200000, "description": "편의점 5% 적립" }
+    ]
+  },
+  {
+    "cardId": 3,
+    "cardName": "농협 올바른POINT 체크카드",
+    "company": "농협",
+    "benefits": [
+      { "category": "FOOD", "benefitType": "POINT", "benefitValue": 0.002, "requirementMin": 0, "description": "식비 0.2% 적립" },
+      { "category": "CAFE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 300000, "description": "카페 0.3% 적립" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 300000, "description": "편의점 0.3% 적립" },
+      { "category": "CULTURE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 300000, "description": "문화 0.3% 적립" },
+      { "category": "SHOPPING", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 300000, "description": "쇼핑 0.3% 적립" }
+    ]
+  },
+  {
+    "cardId": 4,
+    "cardName": "카카오뱅크 프렌즈 체크카드",
+    "company": "카카오뱅크",
+    "benefits": [
+      { "category": "CAFE", "benefitType": "DISCOUNT", "benefitValue": 0.03, "requirementMin": 300000, "description": "카페 3% 근사치" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "DISCOUNT", "benefitValue": 0.02, "requirementMin": 300000, "description": "편의점 2% 근사치" }
+    ]
+  },
+  {
+    "cardId": 5,
+    "cardName": "토스뱅크 체크카드",
+    "company": "토스뱅크",
+    "benefits": [
+      { "category": "FOOD", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 0, "description": "식비 0.3% 캐시백" },
+      { "category": "CAFE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 0, "description": "카페 0.3% 캐시백" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 0, "description": "편의점 0.3% 캐시백" },
+      { "category": "CULTURE", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 0, "description": "문화 0.3% 캐시백" },
+      { "category": "SHOPPING", "benefitType": "POINT", "benefitValue": 0.003, "requirementMin": 0, "description": "쇼핑 0.3% 캐시백" }
+    ]
+  },
+  {
+    "cardId": 6,
+    "cardName": "우리 카드의정석2 원더라이프 체크카드",
+    "company": "우리",
+    "benefits": [
+      { "category": "FOOD", "benefitType": "POINT", "benefitValue": 0.002, "requirementMin": 0, "description": "식비 0.2% 캐시백" },
+      { "category": "CAFE", "benefitType": "POINT", "benefitValue": 0.002, "requirementMin": 0, "description": "카페 0.2% 캐시백" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "POINT", "benefitValue": 0.005, "requirementMin": 0, "description": "편의점 0.5% 캐시백" },
+      { "category": "CULTURE", "benefitType": "POINT", "benefitValue": 0.002, "requirementMin": 0, "description": "문화 0.2% 캐시백" },
+      { "category": "SHOPPING", "benefitType": "POINT", "benefitValue": 0.005, "requirementMin": 0, "description": "쇼핑 0.5% 캐시백" }
+    ]
+  },
+  {
+    "cardId": 7,
+    "cardName": "KB국민 트래블러스 체크카드",
+    "company": "KB국민",
+    "benefits": [
+      { "category": "FOOD", "benefitType": "DISCOUNT", "benefitValue": 0.02, "requirementMin": 200000, "description": "식비 2% 근사치" },
+      { "category": "CAFE", "benefitType": "DISCOUNT", "benefitValue": 0.03, "requirementMin": 200000, "description": "카페 3% 근사치" },
+      { "category": "CONVENIENCE_STORE", "benefitType": "DISCOUNT", "benefitValue": 0.02, "requirementMin": 200000, "description": "편의점 2% 근사치" },
+      { "category": "SHOPPING", "benefitType": "DISCOUNT", "benefitValue": 0.03, "requirementMin": 200000, "description": "쇼핑 3% 근사치" }
+    ]
+  },
+  {
+    "cardId": 8,
+    "cardName": "IBK 일상의기쁨 체크카드",
+    "company": "기업",
+    "benefits": [
+      { "category": "CONVENIENCE_STORE", "benefitType": "DISCOUNT", "benefitValue": 0.10, "requirementMin": 300000, "description": "편의점 10% 할인" },
+      { "category": "CULTURE", "benefitType": "DISCOUNT", "benefitValue": 0.10, "requirementMin": 300000, "description": "영화/문화 10% 할인" },
+      { "category": "CAFE", "benefitType": "DISCOUNT", "benefitValue": 0.05, "requirementMin": 300000, "description": "카페 5% 할인" }
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: 'KoPubDotum';
+  src: url('../assets/fonts/KoPubWorld Dotum Light.ttf') format('truetype');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'KoPubDotum';
+  src: url('../assets/fonts/KoPubWorld Dotum Medium.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'KoPubDotum';
+  src: url('../assets/fonts/KoPubWorld Dotum Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #0076F1;
+  --color-primary-light: #E6F1FB;
+  --color-primary-dark: #0C447C;
+  --color-bg: #F5F7FA;
+  --color-white: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-border: #E5E7EB;
+  --color-danger: #EF4444;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-food: #EF9F27;
+  --color-cafe: #7F77DD;
+  --color-cvs: #D4537E;
+  --color-culture: #1D9E75;
+  --color-shopping: #378ADD;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'KoPubDotum', -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'KoPubDotum', -apple-system, sans-serif;
+}
+
+input, select {
+  font-family: 'KoPubDotum', -apple-system, sans-serif;
+}
