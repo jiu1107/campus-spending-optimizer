@@ -167,10 +167,11 @@ export default function ConsumptionAnalysisView({
   }, {})
 
   const card = {
-    background: '#fff', borderRadius: '12px',
-    border: '0.5px solid var(--color-border)', padding: '18px',
-    minHeight: '260px', display: 'flex', flexDirection: 'column',
-  }
+  background: '#fff', borderRadius: '12px',
+  border: '0.5px solid var(--color-border)', padding: '18px',
+  minHeight: '260px', display: 'flex', flexDirection: 'column',
+  justifyContent: 'space-between',
+}
 
   const btnPrimary = {
     display: 'flex', alignItems: 'center', gap: '5px',

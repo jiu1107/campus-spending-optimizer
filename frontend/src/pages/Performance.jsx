@@ -73,10 +73,14 @@ export default function Performance({
     const lastDay = new Date(currentDate.year, currentDate.month, 0).getDate()
     const remainingDays = Math.max(lastDay - today.getDate(), 1)
     const dailyRemaining = Math.round(remaining / remainingDays)
-    return Object.entries(card.benefits || {})
-      .filter(([, rate]) => rate > 0)
-      .slice(0, 2)
-      .map(([cat, rate]) => ({ cat, rate, dailyRemaining }))
+    const benefitCats = Object.entries(card.benefits || {})
+  .filter(([, val]) => {
+    const rate = typeof val === 'object' ? val?.rate : val
+    return rate > 0
+  })
+  .slice(0, 2)
+  .map(([cat]) => cat)
+return [{ cats: benefitCats, dailyRemaining }]
   }
 
   const achievedCards = userCards.filter(c => getCardSpent(c) >= PERFORMANCE_GOAL)
@@ -225,7 +229,7 @@ export default function Performance({
                               return (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: '#F9FAFB', borderRadius: '8px', fontSize: '12px', color: 'var(--color-text-secondary)', border: '0.5px solid var(--color-border)' }}>
                                   <Icon size={13} color={Meta?.color || '#888'} />
-                                  하루 {s.dailyRemaining.toLocaleString()}원 {s.cat} 소비 시 실적 달성 가능해요
+                                 하루 {s.dailyRemaining.toLocaleString()}원씩 사용하면 이번 달 실적 달성이 가능해요 ({s.cats?.join(', ')} 등 혜택 카테고리 이용 시)
                                 </div>
                               )
                             })}
