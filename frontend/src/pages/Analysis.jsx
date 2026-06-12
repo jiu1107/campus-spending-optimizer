@@ -87,10 +87,12 @@ export default function ConsumptionAnalysisView({
     const cardExpenses = monthlyExpenses.filter(exp =>
       exp.card && exp.card.includes(card.card_name?.replace(' 체크카드', '') || '')
     )
-    return Object.entries(card.benefits || {}).reduce((total, [cat, rate]) => {
-      const catTotal = cardExpenses.filter(exp => exp.category === cat).reduce((sum, exp) => sum + exp.amount, 0)
-      return total + Math.round(catTotal * rate / 100)
-    }, 0)
+    return Object.entries(card.benefits || {}).reduce((total, [cat, val]) => {
+  const rate = typeof val === 'object' ? val?.rate : val
+  if (!rate) return total
+  const catTotal = cardExpenses.filter(exp => exp.category === cat).reduce((sum, exp) => sum + exp.amount, 0)
+  return total + Math.round(catTotal * rate / 100)
+}, 0)
   }
 
   const getCardPerformance = (card) => monthlyExpenses
@@ -165,10 +167,11 @@ export default function ConsumptionAnalysisView({
   }, {})
 
   const card = {
-    background: '#fff', borderRadius: '12px',
-    border: '0.5px solid var(--color-border)', padding: '18px',
-    minHeight: '260px', display: 'flex', flexDirection: 'column',
-  }
+  background: '#fff', borderRadius: '12px',
+  border: '0.5px solid var(--color-border)', padding: '18px',
+  minHeight: '260px', display: 'flex', flexDirection: 'column',
+  justifyContent: 'space-between',
+}
 
   const btnPrimary = {
     display: 'flex', alignItems: 'center', gap: '5px',
@@ -438,12 +441,17 @@ export default function ConsumptionAnalysisView({
                 )
               })}
             </div>
-            {isCloseToOverBudget && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '10px', color: '#ef4444', fontSize: '11px', fontWeight: '500', flexShrink: 0 }}>
-                <MdWarning size={13} />
-                일부 카테고리 예산 초과 또는 임박 상태
-              </div>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '8px', borderTop: '0.5px solid var(--color-border)', marginTop: '8px', flexShrink: 0 }}>
+  <span style={{ fontSize: '12px', fontWeight: '500', color: 'var(--color-text-secondary)' }}>
+    총 소진 {totalSpent.toLocaleString()}원 / {totalBudget > 0 ? totalBudget.toLocaleString() : '-'}원
+  </span>
+</div>
+{isCloseToOverBudget && (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px', color: '#ef4444', fontSize: '11px', fontWeight: '500', flexShrink: 0 }}>
+    <MdWarning size={13} />
+    일부 카테고리 예산 초과 또는 임박 상태
+  </div>
+)}
           </div>
         </div>
       </div>

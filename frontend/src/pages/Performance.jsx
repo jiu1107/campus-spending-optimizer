@@ -42,22 +42,28 @@ export default function Performance({
       .reduce((sum, exp) => sum + exp.amount, 0)
 
   const getCardBenefit = (card) =>
-    Object.entries(card.benefits || {}).reduce((total, [cat, rate]) => {
+  Object.entries(card.benefits || {}).reduce((total, [cat, val]) => {
+    const rate = typeof val === 'object' ? val?.rate : val
+    if (!rate) return total
+    const spent = monthlyExpenses
+      .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
+      .reduce((sum, exp) => sum + exp.amount, 0)
+    return total + Math.round(spent * rate / 100)
+  }, 0)
+
+  const getCardBenefitDetails = (card) =>
+  Object.entries(card.benefits || {})
+    .filter(([, val]) => {
+      const rate = typeof val === 'object' ? val?.rate : val
+      return rate > 0
+    })
+    .map(([cat, val]) => {
+      const rate = typeof val === 'object' ? val?.rate : val
       const spent = monthlyExpenses
         .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
         .reduce((sum, exp) => sum + exp.amount, 0)
-      return total + Math.round(spent * rate / 100)
-    }, 0)
-
-  const getCardBenefitDetails = (card) =>
-    Object.entries(card.benefits || {})
-      .filter(([, rate]) => rate > 0)
-      .map(([cat, rate]) => {
-        const spent = monthlyExpenses
-          .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
-          .reduce((sum, exp) => sum + exp.amount, 0)
-        return { cat, rate, spent, earned: Math.round(spent * rate / 100) }
-      })
+      return { cat, rate, spent, earned: Math.round(spent * rate / 100) }
+    })
       .filter(d => d.earned > 0)
 
   const getSuggestions = (card, cardSpent) => {
@@ -67,10 +73,14 @@ export default function Performance({
     const lastDay = new Date(currentDate.year, currentDate.month, 0).getDate()
     const remainingDays = Math.max(lastDay - today.getDate(), 1)
     const dailyRemaining = Math.round(remaining / remainingDays)
-    return Object.entries(card.benefits || {})
-      .filter(([, rate]) => rate > 0)
-      .slice(0, 2)
-      .map(([cat, rate]) => ({ cat, rate, dailyRemaining }))
+    const benefitCats = Object.entries(card.benefits || {})
+  .filter(([, val]) => {
+    const rate = typeof val === 'object' ? val?.rate : val
+    return rate > 0
+  })
+  .slice(0, 2)
+  .map(([cat]) => cat)
+return [{ cats: benefitCats, dailyRemaining }]
   }
 
   const achievedCards = userCards.filter(c => getCardSpent(c) >= PERFORMANCE_GOAL)
@@ -219,7 +229,7 @@ export default function Performance({
                               return (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: '#F9FAFB', borderRadius: '8px', fontSize: '12px', color: 'var(--color-text-secondary)', border: '0.5px solid var(--color-border)' }}>
                                   <Icon size={13} color={Meta?.color || '#888'} />
-                                  {s.cat} 일 {s.dailyRemaining.toLocaleString()}원 추가 소비
+                                 하루 {s.dailyRemaining.toLocaleString()}원씩 사용하면 이번 달 실적 달성이 가능해요 ({s.cats?.join(', ')} 등 혜택 카테고리 이용 시)
                                 </div>
                               )
                             })}

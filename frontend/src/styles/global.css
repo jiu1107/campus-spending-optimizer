@@ -19,6 +19,9 @@
   font-weight: 700;
 }
 
+html {
+  font-size: 17px;
+}
 html, body, #root {
   height: 100%;
   margin: 0;

@@ -113,11 +113,11 @@ function Home({ currentBudgets = {}, currentDate, userCards = [], expenses = [] 
             </div>
           </div>
           <div className={styles.summaryCard}>
-            <p className={styles.summaryLabel}>이번달 절약 금액</p>
+            <p className={styles.summaryLabel}>이번달 잔여 예산</p>
             <p className={`${styles.summaryValue} ${styles.valuePrimary}`}>{savedAmount.toLocaleString()}원</p>
             <div className={`${styles.summaryBadge} ${styles.badgeDown}`}>
               <MdAttachMoney size={12} />
-              예산 대비 절약
+              예산 대비 잔여
             </div>
           </div>
           <div className={styles.summaryCard}>
@@ -138,7 +138,7 @@ function Home({ currentBudgets = {}, currentDate, userCards = [], expenses = [] 
           {/* 카드 혜택 지도 */}
           <div className={`${styles.featureCard} ${styles.mapCard}`} onClick={() => navigate('/map')}
             style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
-            <div className={styles.featureCardHeader} style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1, padding: '14px 16px', background: 'linear-gradient(to bottom, rgba(255,255,255,0.95) 70%, rgba(255,255,255,0))' }}>
+            <div className={styles.featureCardHeader} style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1, padding: '14px 16px', background: 'white' }}>
               <div className={styles.featureIconWrap}>
                 <MdLocationOn size={18} color="var(--color-primary)" />
               </div>
