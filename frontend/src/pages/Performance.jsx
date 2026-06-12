@@ -42,22 +42,28 @@ export default function Performance({
       .reduce((sum, exp) => sum + exp.amount, 0)
 
   const getCardBenefit = (card) =>
-    Object.entries(card.benefits || {}).reduce((total, [cat, rate]) => {
+  Object.entries(card.benefits || {}).reduce((total, [cat, val]) => {
+    const rate = typeof val === 'object' ? val?.rate : val
+    if (!rate) return total
+    const spent = monthlyExpenses
+      .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
+      .reduce((sum, exp) => sum + exp.amount, 0)
+    return total + Math.round(spent * rate / 100)
+  }, 0)
+
+  const getCardBenefitDetails = (card) =>
+  Object.entries(card.benefits || {})
+    .filter(([, val]) => {
+      const rate = typeof val === 'object' ? val?.rate : val
+      return rate > 0
+    })
+    .map(([cat, val]) => {
+      const rate = typeof val === 'object' ? val?.rate : val
       const spent = monthlyExpenses
         .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
         .reduce((sum, exp) => sum + exp.amount, 0)
-      return total + Math.round(spent * rate / 100)
-    }, 0)
-
-  const getCardBenefitDetails = (card) =>
-    Object.entries(card.benefits || {})
-      .filter(([, rate]) => rate > 0)
-      .map(([cat, rate]) => {
-        const spent = monthlyExpenses
-          .filter(exp => exp.category === cat && exp.card && exp.card.includes(card.card_name.replace(' 체크카드', '')))
-          .reduce((sum, exp) => sum + exp.amount, 0)
-        return { cat, rate, spent, earned: Math.round(spent * rate / 100) }
-      })
+      return { cat, rate, spent, earned: Math.round(spent * rate / 100) }
+    })
       .filter(d => d.earned > 0)
 
   const getSuggestions = (card, cardSpent) => {
@@ -219,7 +225,7 @@ export default function Performance({
                               return (
                                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', background: '#F9FAFB', borderRadius: '8px', fontSize: '12px', color: 'var(--color-text-secondary)', border: '0.5px solid var(--color-border)' }}>
                                   <Icon size={13} color={Meta?.color || '#888'} />
-                                  {s.cat} 일 {s.dailyRemaining.toLocaleString()}원 추가 소비
+                                  하루 {s.dailyRemaining.toLocaleString()}원 {s.cat} 소비 시 실적 달성 가능해요
                                 </div>
                               )
                             })}

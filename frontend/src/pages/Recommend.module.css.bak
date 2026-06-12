@@ -1,0 +1,409 @@
+.page {
+  background: var(--color-bg);
+  min-height: calc(100vh - 56px);
+  padding: 24px 40px;
+}
+
+.inner {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pageTitle {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* 상단 요약 배너 */
+.summaryBanner {
+  background: #fff;
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 24px;
+  border-right: 0.5px solid var(--color-border);
+}
+.summaryItem:last-child {
+  border-right: none;
+}
+.summaryDivider {
+  display: none;
+}
+
+.summaryText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summaryLabel {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+.summaryValue {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.summaryValuePrimary {
+  color: var(--color-primary);
+}
+
+.summaryDivider {
+  width: 1px;
+  height: 32px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* 예외 상태 */
+.emptyWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border);
+  padding: 60px 40px;
+}
+
+.emptyTitle { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.emptySub { font-size: 13px; color: var(--color-text-secondary); }
+
+.emptyBtn {
+  margin-top: 8px;
+  padding: 10px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 메인 레이아웃 */
+.contentWrap {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* 좌측 */
+.leftCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.catItem {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--color-border);
+  background: #F9FAFB;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.catItem:hover { border-color: var(--color-primary); }
+
+.activeCat {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.catMain {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.catLeft {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.catIcon {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+}
+
+.activeCatIcon { color: var(--color-primary); }
+
+.catName {
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+.activeCatName {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.catRight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.catAmount {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.activeCatAmount {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.catArrow {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.catBestCard {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 0 2px;
+}
+
+.catBestDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.catBestName {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+.catBestRate {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.activeCatBestRate { color: var(--color-primary); }
+
+/* 우측 */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rightHeader { flex-shrink: 0; }
+
+.rightTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.rightSub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.recList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.recItem {
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.bestItem {
+  background: var(--color-primary-light);
+  border: 1.5px solid var(--color-primary);
+}
+
+.normalItem {
+  background: #fff;
+  border: 0.5px solid var(--color-border);
+}
+
+.itemTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.itemLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  width: fit-content;
+  font-weight: 500;
+}
+
+.bestBadge { background: var(--color-primary); color: #fff; }
+.normalBadge {
+  background: #F1F5F9;
+  color: var(--color-text-secondary);
+  border: 0.5px solid var(--color-border);
+}
+
+.cardName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.bestCardName {
+  color: var(--color-primary);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.itemRight {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rateText {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.bestRate { color: var(--color-primary); }
+
+.expectedText {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.bestExpected { color: var(--color-primary); }
+
+.itemDetail {
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bestDetail { background: rgba(255,255,255,0.6); }
+.normalDetail { background: #F9FAFB; }
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detailLabel { font-size: 12px; color: var(--color-text-secondary); }
+.detailValue { font-size: 12px; font-weight: 500; color: var(--color-text-primary); }
+.bestDetailValue { color: var(--color-primary); }
+
+/* 혜택 없음 안내 */
+.nobenefitBox {
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 14px;
+  border: 0.5px solid var(--color-border);
+}
+
+.nobenefitContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nobenefitTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.nobenefitSub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* 팁 박스 */
+.tipBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #F0FDF4;
+  border: 0.5px solid #10B981;
+  border-radius: 10px;
+  padding: 12px 14px;
+  flex-shrink: 0;
+}
+
+.tipText {
+  font-size: 12px;
+  color: #065F46;
+  line-height: 1.6;
+}
